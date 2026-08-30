@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoWave — Leaderboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #050505;
+      --card: #0f0f0f;
+      --border: rgba(255,255,255,0.08);
+      --text: #fff;
+      --muted: #94a3b8;
+      --primary: #3B82F6;
+      --gold: #fbbf24;
+      --silver: #94a3b8;
+      --bronze: #d97706;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      text-decoration: none;
+    }
+    .back:hover { color: white; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      padding: 0.5rem 1.1rem;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab.active {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: var(--primary);
+      color: #93c5fd;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.1rem;
+      overflow: hidden;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .leaderboard-item:last-child {
+      border-bottom: none;
+    }
+
+    .leaderboard-item:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .rank {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .rank.gold {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--gold);
+    }
+    .rank.silver {
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--silver);
+    }
+    .rank.bronze {
+      background: rgba(217, 119, 6, 0.15);
+      color: var(--bronze);
+    }
+    .rank.normal {
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .user-info .name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .user-info .role {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .stats {
+      text-align: right;
+    }
+
+    .stats .points {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .stats .label {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .top-three {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .top-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .top-card.first {
+      border-color: rgba(251, 191, 36, 0.4);
+      background: linear-gradient(180deg, rgba(251, 191, 36, 0.08), transparent);
+    }
+
+    .top-card .position {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .top-card .big-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin: 0 auto 0.75rem;
+    }
+
+    .top-card.first .big-avatar {
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      color: #000;
+    }
+
+    .top-card .name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .top-card .points {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="dashboard.html" class="back">← Back to Dashboard</a>
+
+    <div class="header">
+      <div>
+        <h1>Leaderboard</h1>
+        <p class="subtitle">Top staff and members based on activity & performance</p>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active">This Week</div>
+      <div class="tab">This Month</div>
+      <div class="tab">All Time</div>
+      <div class="tab">Sessions</div>
+    </div>
+
+    <!-- Top 3 -->
+    <div class="top-three">
+      <div class="top-card">
+        <div class="position">2nd</div>
+        <div class="big-avatar">AB</div>
+        <div class="name">AlexBuilder</div>
+        <div class="points">1,842</div>
+      </div>
+      <div class="top-card first">
+        <div class="position">1st</div>
+        <div class="big-avatar">RM</div>
+        <div class="name">REDmonster776</div>
+        <div class="points">2,451</div>
+      </div>
+      <div class="top-card">
+        <div class="position">3rd</div>
+        <div class="big-avatar">KK</div>
+        <div class="name">KKDink</div>
+        <div class="points">1,673</div>
+      </div>
+    </div>
+
+    <!-- Full List -->
+    <div class="card">
+      <div class="leaderboard-item">
+        <div class="rank gold">1</div>
+        <div class="avatar">RM</div>
+        <div class="user-info">
+          <div class="name">REDmonster776</div>
+          <div class="role">Administrator</div>
+        </div>
+        <div class="stats">
+          <div class="points">2,451</div>
+          <div class="label">points</div>
+        </div>
+      </div>
+
+      <div class="leaderboard-item">
+        <div class="rank silver">2</div>
+        <div class="avatar">AB</div>
+        <div class="user-info">
+          <div class="name">AlexBuilder</div>
+          <div class="role">Moderator</div>
+        </div>
+        <div class="stats">
+          <div class="points">1,842</div>
+          <div class="label">points</div>
+        </div>
+      </div>
+
+      <div class="leaderboard-item">
+        <div class="rank bronze">3</div>
+        <div class="avatar">KK</div>
+        <div class="user-info">
+          <div class="name">KKDink</div>
+          <div class="role">Moderator</div>
+        </div>
+        <div class="stats">
+          <div class="points">1,673</div>
+          <div class="label">points</div>
+        </div>
+      </div>
+
+      <div class="leaderboard-item">
+        <div class="rank normal">4</div>
+        <div class="avatar">PW</div>
+        <div class="user-info">
+          <div class="name">Playingwithfire170</div>
+          <div class="role">Helper</div>
+        </div>
+        <div class="stats">
+          <div class="points">1,204</div>
+          <div class="label">points</div>
+        </div>
+      </div>
+
+      <div class="leaderboard-item">
+        <div class="rank normal">5</div>
+        <div class="avatar">CJ</div>
+        <div class="user-info">
+          <div class="name">CJOtwin</div>
+          <div class="role">Supervisor</div>
+        </div>
+        <div class="stats">
+          <div class="points">987</div>
+          <div class="label">points</div>
+        </div>
+      </div>
+
+      <div class="leaderboard-item">
+        <div class="rank normal">6</div>
+        <div class="avatar">SB</div>
+        <div class="user-info">
+          <div class="name">Sibernights10</div>
+          <div class="role">Ranker</div>
+        </div>
+        <div class="stats">
+          <div class="points">856</div>
+          <div class="label">points</div>
+        </div>
+      </div>
+
+      <div class="leaderboard-item">
+        <div class="rank normal">7</div>
+        <div class="avatar">JP</div>
+        <div class="user-info">
+          <div class="name">Jimpoun5b</div>
+          <div class="role">Helper</div>
+        </div>
+        <div class="stats">
+          <div class="points">742</div>
+          <div class="label">points</div>
+        </div>
+      </div>
+
+      <div class="leaderboard-item">
+        <div class="rank normal">8</div>
+        <div class="avatar">GS</div>
+        <div class="user-info">
+          <div class="name">GSDobbie</div>
+          <div class="role">Member</div>
+        </div>
+        <div class="stats">
+          <div class="points">531</div>
+          <div class="label">points</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
