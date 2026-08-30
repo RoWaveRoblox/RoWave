@@ -3,12 +3,584 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RoWave</title>
+  <title>RoWave — Premium Roblox Group Management</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated dots background */
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Subtle grid */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Navbar */
+    nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo .ro { color: #3B82F6; }
+    .logo .wave { color: #fff; }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #3B82F6;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2563EB;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      z-index: 5;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      letter-spacing: -1.5px;
+    }
+
+    .hero h1 .blue { color: #3B82F6; }
+    .hero h1 .gradient {
+      background: linear-gradient(90deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: #94a3b8;
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Login Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1.25rem;
+      width: 100%;
+      max-width: 440px;
+      padding: 2.5rem;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+
+    .modal h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal .subtitle {
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 0.75rem;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #3B82F6;
+    }
+
+    .code-box {
+      background: #111;
+      border: 1px dashed rgba(59, 130, 246, 0.4);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+      font-family: monospace;
+      font-size: 1.1rem;
+      color: #60a5fa;
+      margin: 1rem 0;
+      word-break: break-all;
+    }
+
+    .status {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      text-align: center;
+      display: none;
+    }
+
+    .status.success {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      display: block;
+    }
+
+    .status.error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      display: block;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    /* Onboarding */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .theme-card {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0.85rem;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .theme-card:hover { border-color: #3B82F6; }
+    .theme-card.selected {
+      border-color: #3B82F6;
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .theme-card.locked {
+      opacity: 0.55;
+      position: relative;
+    }
+
+    .theme-card .lock {
+      font-size: 0.75rem;
+      color: #f59e0b;
+      margin-top: 0.3rem;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .close-btn:hover { color: white; }
+
+    /* Footer note */
+    .footer-note {
+      text-align: center;
+      color: #475569;
+      font-size: 0.85rem;
+      padding: 3rem 1rem;
+      position: relative;
+      z-index: 5;
+    }
+  </style>
 </head>
-
 <body>
-  <div id="root"></div>
+  <canvas id="canvas"></canvas>
+  <div class="grid-bg"></div>
 
-  <script type="module" src="./App.jsx"></script>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">
+      <span class="ro">Ro</span><span class="wave">Wave</span>
+    </div>
+    <div class="nav-links">
+      <a href="#">Features</a>
+      <a href="#">Pricing</a>
+      <a href="#">Docs</a>
+      <button class="btn btn-primary" onclick="openModal()">Sign in</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span>✦</span> The premium management hub for Roblox groups
+    </div>
+
+    <h1>
+      The <span class="blue">BEST</span> all-in-one<br>
+      solution for your <span class="gradient">group</span>
+    </h1>
+
+    <p>
+      Moderation, member ranking, live analytics, sessions, mod calls, and more — 
+      all in one beautiful dashboard. Built for serious communities.
+    </p>
+
+    <div class="hero-buttons">
+      <button class="btn btn-primary" onclick="openModal()">
+        Sign in or Up TODAY →
+      </button>
+      <button class="btn btn-secondary">
+        Watch the demo
+      </button>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    Free Dark & White themes • 7-day trial on premium features • No credit card required
+  </div>
+
+  <!-- Login / Onboarding Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <button class="close-btn" onclick="closeModal()">×</button>
+
+      <!-- Step 1: Discord -->
+      <div class="step active" id="step1">
+        <h2>Welcome to RoWave</h2>
+        <p class="subtitle">Sign in with Discord to get started</p>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:1rem;" onclick="goToStep(2)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          Continue with Discord
+        </button>
+      </div>
+
+      <!-- Step 2: Roblox Verification -->
+      <div class="step" id="step2">
+        <h2>Verify your Roblox</h2>
+        <p class="subtitle">We use the description method to securely link your account</p>
+
+        <div class="form-group">
+          <label>Roblox Username</label>
+          <input type="text" id="robloxUser" placeholder="Enter your username" />
+        </div>
+
+        <button class="btn btn-primary" style="width:100%; margin-bottom:1rem;" onclick="generateCode()">
+          Generate Verification Code
+        </button>
+
+        <div id="codeSection" style="display:none;">
+          <p style="font-size:0.9rem; color:#94a3b8; margin-bottom:0.5rem;">
+            Go to your Roblox profile → About → Edit and paste this exact text:
+          </p>
+          <div class="code-box" id="verifyCode"></div>
+          <button class="btn btn-primary" style="width:100%;" onclick="checkVerification()">
+            Check Verification
+          </button>
+          <div class="status" id="statusMsg"></div>
+        </div>
+      </div>
+
+      <!-- Step 3: Onboarding -->
+      <div class="step" id="step3">
+        <h2>Almost there!</h2>
+        <p class="subtitle">Quick questions so we can personalize RoWave for you</p>
+
+        <div class="form-group">
+          <label>Where did you hear about us?</label>
+          <input type="text" id="heardFrom" placeholder="Discord, friend, YouTube..." />
+        </div>
+
+        <label style="display:block; font-size:0.85rem; font-weight:500; color:#cbd5e1; margin-bottom:0.75rem;">
+          Choose your theme
+        </label>
+
+        <div class="theme-grid">
+          <div class="theme-card selected" onclick="selectTheme(this, 'dark')">
+            <div style="font-weight:600;">Dark Mode</div>
+            <div style="font-size:0.8rem; color:#94a3b8;">Free</div>
+          </div>
+          <div class="theme-card" onclick="selectTheme(this, 'white')">
+            <div style="font-weight:600;">White Mode</div>
+            <div style="font-size:0.8rem; color:#94a3b8;">Free</div>
+          </div>
+          <div class="theme-card locked" onclick="alert('Requires Wave gamepass (1962126546) or 7-day trial')">
+            <div style="font-weight:600;">Wave Mode</div>
+            <div class="lock">🔒 Gamepass</div>
+          </div>
+          <div class="theme-card locked" onclick="alert('Requires Glass gamepass (1962114572) or 7-day trial')">
+            <div style="font-weight:600;">Glass Mode</div>
+            <div class="lock">🔒 Gamepass</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%; margin-top:1rem;" onclick="finishOnboarding()">
+          Enter RoWave →
+        </button>
+        <button class="btn btn-secondary" style="width:100%; margin-top:0.75rem;" onclick="finishOnboarding()">
+          Skip (use Dark Mode)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== Animated Dots Background =====
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let dots = [];
+    let mouse = { x: null, y: null };
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Dot {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 1.8 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = (Math.random() - 0.5) * 0.4;
+        this.opacity = Math.random() * 0.5 + 0.1;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(59, 130, 246, ${this.opacity})`;
+        ctx.fill();
+      }
+    }
+
+    function initDots() {
+      dots = [];
+      const count = Math.floor((canvas.width * canvas.height) / 12000);
+      for (let i = 0; i < count; i++) dots.push(new Dot());
+    }
+    initDots();
+    window.addEventListener('resize', initDots);
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      dots.forEach(dot => {
+        dot.update();
+        dot.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // ===== Modal Logic =====
+    function openModal() {
+      document.getElementById('modal').classList.add('active');
+      goToStep(1);
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    function goToStep(n) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + n).classList.add('active');
+    }
+
+    let currentCode = '';
+
+    function generateCode() {
+      const user = document.getElementById('robloxUser').value.trim();
+      if (!user) {
+        alert('Please enter your Roblox username');
+        return;
+      }
+      // Generate a unique-looking code
+      currentCode = 'RoWave-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      document.getElementById('verifyCode').textContent = currentCode;
+      document.getElementById('codeSection').style.display = 'block';
+      document.getElementById('statusMsg').className = 'status';
+      document.getElementById('statusMsg').style.display = 'none';
+    }
+
+    function checkVerification() {
+      const status = document.getElementById('statusMsg');
+      // MOCK: 70% chance of success for demo
+      const success = Math.random() > 0.3;
+
+      if (success) {
+        status.textContent = '✓ Verification successful! Account linked.';
+        status.className = 'status success';
+        setTimeout(() => goToStep(3), 1200);
+      } else {
+        status.textContent = 'Error: Description does not match. Please make sure you saved the exact code.';
+        status.className = 'status error';
+      }
+    }
+
+    function selectTheme(el, theme) {
+      document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function finishOnboarding() {
+      alert('Welcome to RoWave! (This is the demo – next we build the real dashboard)');
+      closeModal();
+    }
+
+    // Close modal on outside click
+    document.getElementById('modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+  </script>
 </body>
 </html>
