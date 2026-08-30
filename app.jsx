@@ -1,8 +1,6 @@
-import Home from "./Home";
+import Home from "./Home.jsx";
 import "./Home.css";
 
-function App() {
+export default function App() {
   return <Home />;
 }
-
-export default App;
