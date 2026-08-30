@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoWave Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #050505;
+      --sidebar: #0a0a0a;
+      --card: #111111;
+      --border: rgba(255,255,255,0.08);
+      --text: #ffffff;
+      --muted: #94a3b8;
+      --primary: #3B82F6;
+      --primary-hover: #2563EB;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 50;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+    .logo .ro { color: var(--primary); }
+    .logo .wave { color: white; }
+
+    .nav {
+      flex: 1;
+      padding: 1rem 0.75rem;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      padding: 0 0.75rem 0.5rem;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: 0.6rem;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.15s;
+      margin-bottom: 2px;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+
+    .nav-item.active {
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      opacity: 0.9;
+    }
+
+    .user-box {
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3B82F6, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* Main content */
+    .main {
+      margin-left: 260px;
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 64px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      background: rgba(5,5,5,0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .page-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .content {
+      padding: 2rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Grid helpers */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+
+    @media (max-width: 1100px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Stat cards */
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 0.6rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.06);
+      color: white;
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+    .btn-sm {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    /* Tables / Lists */
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .list-item:last-child { border-bottom: none; }
+
+    .player {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .player-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-green { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .badge-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .badge-red { background: rgba(239,68,68,0.15); color: #f87171; }
+    .badge-yellow { background: rgba(245,158,11,0.15); color: #fbbf24; }
+
+    /* View switching */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Organization cards */
+    .org-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .org-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .org-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 0.75rem;
+      background: #1e293b;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="ro">Ro</span><span class="wave">Wave</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">
+        <div class="nav-title">Main</div>
+        <div class="nav-item active" data-view="home">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Home
+        </div>
+        <div class="nav-item" data-view="organizations">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Organizations
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-title">Management</div>
+        <div class="nav-item" data-view="players">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          Players
+        </div>
+        <div class="nav-item" data-view="servers">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+          Servers
+        </div>
+        <div class="nav-item" data-view="roles">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Roles
+        </div>
+        <div class="nav-item" data-view="moderation">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          Moderation
+        </div>
+        <div class="nav-item" data-view="modcalls">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          Mod Calls
+        </div>
+        <div class="nav-item" data-view="sessions">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Sessions
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-title">Account</div>
+        <div class="nav-item" data-view="compliance">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Compliance
+        </div>
+        <div class="nav-item" data-view="settings">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Settings
+        </div>
+      </div>
+    </nav>
+
+    <div class="user-box">
+      <div class="avatar">RW</div>
+      <div>
+        <div style="font-weight:600; font-size:0.9rem;">Your Account</div>
+        <div style="font-size:0.75rem; color:var(--muted);">Owner</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="pageTitle">Home</div>
+      <div style="display:flex; gap:0.75rem; align-items:center;">
+        <button class="btn btn-ghost btn-sm">Create Organization</button>
+        <div class="avatar" style="width:34px;height:34px;font-size:0.8rem;">RW</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- ==================== HOME ==================== -->
+      <div class="view active" id="view-home">
+        <div class="grid-4" style="margin-bottom:1.75rem;">
+          <div class="stat-card">
+            <div class="stat-label">Organizations</div>
+            <div class="stat-value">3</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Active Sessions</div>
+            <div class="stat-value">1</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Open Mod Calls</div>
+            <div class="stat-value">2</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Staff Online</div>
+            <div class="stat-value">27</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Recent Activity</div>
+            <div class="card-sub">Latest actions across your groups</div>
+            <div class="list-item">
+              <div class="player">
+                <div class="player-avatar">JD</div>
+                <div>
+                  <div style="font-weight:500;">JohnDoe123</div>
+                  <div style="font-size:0.8rem;color:var(--muted);">Warned • 12 min ago</div>
+                </div>
+              </div>
+              <span class="badge badge-yellow">Warning</span>
+            </div>
+            <div class="list-item">
+              <div class="player">
+                <div class="player-avatar">AB</div>
+                <div>
+                  <div style="font-weight:500;">AlexBuilder</div>
+                  <div style="font-size:0.8rem;color:var(--muted);">Promoted to Moderator</div>
+                </div>
+              </div>
+              <span class="badge badge-green">Promote</span>
+            </div>
+            <div class="list-item">
+              <div class="player">
+                <div class="player-avatar">SK</div>
+                <div>
+                  <div style="font-weight:500;">SkyKid99</div>
+                  <div style="font-size:0.8rem;color:var(--muted);">Game Ban issued</div>
+                </div>
+              </div>
+              <span class="badge badge-red">Ban</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Active Sessions</div>
+            <div class="card-sub">Currently running</div>
+            <div class="list-item">
+              <div>
+                <div style="font-weight:600;">Training Session</div>
+                <div style="font-size:0.85rem;color:var(--muted);">Hosted by REDmonster776 • 12 attendees</div>
+              </div>
+              <button class="btn btn-primary btn-sm">Join</button>
+            </div>
+            <div class="empty" style="padding:1.5rem;">
+              No other sessions right now
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== ORGANIZATIONS ==================== -->
+      <div class="view" id="view-organizations">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <div>
+            <h2 style="font-size:1.4rem; font-weight:700;">Your Organizations</h2>
+            <p style="color:var(--muted); font-size:0.95rem;">Groups you can access</p>
+          </div>
+          <button class="btn btn-primary">+ Add Organization</button>
+        </div>
+
+        <div class="grid-3">
+          <div class="org-card">
+            <div class="org-icon" style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);">SV</div>
+            <div style="font-weight:600; margin-bottom:0.25rem;">Stateview Correctional</div>
+            <div style="font-size:0.85rem; color:var(--muted);">Member</div>
+          </div>
+          <div class="org-card">
+            <div class="org-icon" style="background:linear-gradient(135deg,#7c2d12,#ea580c);">CB</div>
+            <div style="font-weight:600; margin-bottom:0.25rem;">Coast Beach</div>
+            <div style="font-size:0.85rem; color:var(--muted);">Owner</div>
+          </div>
+          <div class="org-card">
+            <div class="org-icon" style="background:linear-gradient(135deg,#1e1b4b,#4f46e5);">BC</div>
+            <div style="font-weight:600; margin-bottom:0.25rem;">BloxCord Services</div>
+            <div style="font-size:0.85rem; color:var(--muted);">Member</div>
+          </div>
+          <div class="org-card" style="border-style:dashed; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:160px;">
+            <div style="font-size:2rem; color:var(--muted); margin-bottom:0.5rem;">+</div>
+            <div style="color:var(--muted); font-weight:500;">Add organization</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PLAYERS ==================== -->
+      <div class="view" id="view-players">
+        <div class="card">
+          <div class="card-title">Players</div>
+          <div class="card-sub">People who have played your games</div>
+          <div class="list-item">
+            <div class="player">
+              <div class="player-avatar">GS</div>
+              <div>
+                <div style="font-weight:500;">GSDobbie</div>
+                <div style="font-size:0.8rem;color:var(--muted);">Last seen 2 hours ago</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn btn-ghost btn-sm">View</button>
+              <button class="btn btn-ghost btn-sm">Warn</button>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="player">
+              <div class="player-avatar">BU</div>
+              <div>
+                <div style="font-weight:500;">buddh_a</div>
+                <div style="font-size:0.8rem;color:var(--muted);">Online now</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn btn-ghost btn-sm">View</button>
+              <button class="btn btn-ghost btn-sm">Warn</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SERVERS ==================== -->
+      <div class="view" id="view-servers">
+        <div class="card">
+          <div class="card-title">Running Servers</div>
+          <div class="card-sub">32 staff online across servers</div>
+          <div class="list-item">
+            <div>
+              <div style="font-weight:600;">Server J</div>
+              <div style="font-size:0.85rem;color:var(--muted);">30/45 • 27 staff</div>
+            </div>
+            <button class="btn btn-primary btn-sm">Join</button>
+          </div>
+          <div class="list-item">
+            <div>
+              <div style="font-weight:600;">Server E</div>
+              <div style="font-size:0.85rem;color:var(--muted);">7/45 • 5 staff</div>
+            </div>
+            <button class="btn btn-primary btn-sm">Join</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== ROLES ==================== -->
+      <div class="view" id="view-roles">
+        <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem;">
+          <div>
+            <h2 style="font-size:1.3rem; font-weight:700;">Roles</h2>
+            <p style="color:var(--muted);">Create roles with sync & permissions</p>
+          </div>
+          <button class="btn btn-primary">+ Create Role</button>
+        </div>
+        <div class="card">
+          <div class="list-item">
+            <div>
+              <div style="font-weight:600;">Administrator</div>
+              <div style="font-size:0.85rem;color:var(--muted);">Full access • Role Sync enabled</div>
+            </div>
+            <button class="btn btn-ghost btn-sm">Edit</button>
+          </div>
+          <div class="list-item">
+            <div>
+              <div style="font-weight:600;">Moderator</div>
+              <div style="font-size:0.85rem;color:var(--muted);">Moderation + Sessions</div>
+            </div>
+            <button class="btn btn-ghost btn-sm">Edit</button>
+          </div>
+          <div class="list-item">
+            <div>
+              <div style="font-weight:600;">Helper</div>
+              <div style="font-size:0.85rem;color:var(--muted);">Limited session perms</div>
+            </div>
+            <button class="btn btn-ghost btn-sm">Edit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== MODERATION ==================== -->
+      <div class="view" id="view-moderation">
+        <div class="card">
+          <div class="card-title">Moderation</div>
+          <div class="card-sub">Warnings, bans, LOAs and more</div>
+          <div style="display:flex; gap:0.75rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+            <button class="btn btn-primary btn-sm">+ Warning</button>
+            <button class="btn btn-ghost btn-sm">Game Ban</button>
+            <button class="btn btn-ghost btn-sm">Tool Ban</button>
+            <button class="btn btn-ghost btn-sm">Leave of Absence</button>
+            <button class="btn btn-ghost btn-sm">Custom Ban Type</button>
+          </div>
+          <div class="list-item">
+            <div>
+              <div style="font-weight:600;">Game Ban • SkyKid99</div>
+              <div style="font-size:0.85rem;color:var(--muted);">Permanent • “Idiot”</div>
+            </div>
+            <span class="badge badge-red">Active</span>
+          </div>
+          <div class="list-item">
+            <div>
+              <div style="font-weight:600;">Warning • JohnDoe123</div>
+              <div style="font-size:0.85rem;color:var(--muted);">Failure to Meet Hosting Expectations</div>
+            </div>
+            <span class="badge badge-yellow">Active</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== MOD CALLS ==================== -->
+      <div class="view" id="view-modcalls">
+        <div class="card">
+          <div class="card-title">Mod Calls</div>
+          <div class="card-sub">Incoming calls from players</div>
+          <div class="list-item">
+            <div class="player">
+              <div class="player-avatar">CB</div>
+              <div>
+                <div style="font-weight:600;">coolbuilder22</div>
+                <div style="font-size:0.85rem;color:var(--muted);">Called for a mod • Obby World • Server #7</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn btn-primary btn-sm">Respond</button>
+              <button class="btn btn-ghost btn-sm">Assist</button>
+              <button class="btn btn-ghost btn-sm">Join Server</button>
+            </div>
+          </div>
+          <div class="empty">No other open mod calls</div>
+        </div>
+      </div>
+
+      <!-- ==================== SESSIONS ==================== -->
+      <div class="view" id="view-sessions">
+        <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem;">
+          <div>
+            <h2 style="font-size:1.3rem; font-weight:700;">Sessions</h2>
+            <p style="color:var(--muted);">Host, schedule and manage sessions</p>
+          </div>
+          <button class="btn btn-primary">+ Host Session</button>
+        </div>
+
+        <div class="card" style="margin-bottom:1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:600; font-size:1.1rem;">Training <span class="badge badge-green" style="margin-left:0.5rem;">Live</span></div>
+              <div style="font-size:0.9rem; color:var(--muted); margin-top:0.3rem;">Hosted by REDmonster776 • 12 attendees • Started 4m ago</div>
+            </div>
+            <button class="btn btn-primary">Manage Session</button>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <div style="font-weight:600; margin-bottom:0.5rem;">Upcoming Training</div>
+            <div style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">07:00 AM • in 7h • by KKDink</div>
+            <div style="font-size:0.8rem; margin-bottom:0.5rem;">Co-Host 2/2 • Helper 2/2</div>
+            <button class="btn btn-ghost btn-sm" style="width:100%;">View</button>
+          </div>
+          <div class="card">
+            <div style="font-weight:600; margin-bottom:0.5rem;">Upcoming Training</div>
+            <div style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">08:00 AM • in 8h • by KKDink</div>
+            <button class="btn btn-ghost btn-sm" style="width:100%;">View</button>
+          </div>
+          <div class="card">
+            <div style="font-weight:600; margin-bottom:0.5rem;">Upcoming Training</div>
+            <div style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">04:00 PM • in 16h</div>
+            <button class="btn btn-ghost btn-sm" style="width:100%;">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== COMPLIANCE ==================== -->
+      <div class="view" id="view-compliance">
+        <div class="card">
+          <div class="card-title">Compliance History</div>
+          <div class="card-sub">Moderation actions against your account</div>
+          <div class="list-item">
+            <div>
+              <div style="font-weight:600;">Game Ban</div>
+              <div style="font-size:0.85rem;color:var(--muted);">Permanent • “Idiot”</div>
+            </div>
+            <span class="badge badge-red">Active</span>
+          </div>
+          <div class="list-item">
+            <div>
+              <div style="font-weight:600;">Warning</div>
+              <div style="font-size:0.85rem;color:var(--muted);">Failure to Meet Hosting Expectations</div>
+            </div>
+            <span class="badge badge-yellow">Active</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SETTINGS ==================== -->
+      <div class="view" id="view-settings">
+        <div class="card">
+          <div class="card-title">Theme</div>
+          <div class="card-sub">Choose your preferred look</div>
+          <div class="grid-2" style="max-width:500px;">
+            <div class="org-card" style="text-align:center;" onclick="alert('Dark Mode selected (default)')">
+              <div style="font-weight:600;">Dark Mode</div>
+              <div style="font-size:0.85rem;color:var(--muted);">Free</div>
+            </div>
+            <div class="org-card" style="text-align:center;" onclick="alert('White Mode selected')">
+              <div style="font-weight:600;">White Mode</div>
+              <div style="font-size:0.85rem;color:var(--muted);">Free</div>
+            </div>
+            <div class="org-card" style="text-align:center; opacity:0.6;" onclick="alert('Requires Wave gamepass or trial')">
+              <div style="font-weight:600;">Wave Mode</div>
+              <div style="font-size:0.85rem;color:var(--warning);">🔒 Locked</div>
+            </div>
+            <div class="org-card" style="text-align:center; opacity:0.6;" onclick="alert('Requires Glass gamepass or trial')">
+              <div style="font-weight:600;">Glass Mode</div>
+              <div style="font-size:0.85rem;color:var(--warning);">🔒 Locked</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple view switcher
+    const navItems = document.querySelectorAll('.nav-item');
+    const views = document.querySelectorAll('.view');
+    const pageTitle = document.getElementById('pageTitle');
+
+    const titles = {
+      home: 'Home',
+      organizations: 'Organizations',
+      players: 'Players',
+      servers: 'Servers',
+      roles: 'Roles',
+      moderation: 'Moderation',
+      modcalls: 'Mod Calls',
+      sessions: 'Sessions',
+      compliance: 'Compliance',
+      settings: 'Settings'
+    };
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        // Update active nav
+        navItems.forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+
+        // Show correct view
+        const viewName = item.getAttribute('data-view');
+        views.forEach(v => v.classList.remove('active'));
+        document.getElementById('view-' + viewName).classList.add('active');
+
+        // Update title
+        pageTitle.textContent = titles[viewName] || 'Dashboard';
+      });
+    });
+  </script>
+</body>
+</html>
