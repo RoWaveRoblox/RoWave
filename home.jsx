@@ -1,257 +1,295 @@
 import { useEffect, useRef } from "react";
 
-function MousePanel({ children, className = "" }) {
-  const panelRef = useRef(null);
+function HoverPanel({ children, className = "" }) {
+  const ref = useRef(null);
 
   useEffect(() => {
-    const panel = panelRef.current;
-    if (!panel) return;
+    const element = ref.current;
 
-    const move = (e) => {
-      const rect = panel.getBoundingClientRect();
+    if (!element) return;
 
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+    function handleMouseMove(event) {
+      const rect = element.getBoundingClientRect();
 
-      const rotateY = ((x / rect.width) - 0.5) * 6;
-      const rotateX = ((y / rect.height) - 0.5) * -6;
+      const mouseX = event.clientX - rect.left;
+      const mouseY = event.clientY - rect.top;
 
-      panel.style.transform = `
-        perspective(900px)
+      const percentX = mouseX / rect.width - 0.5;
+      const percentY = mouseY / rect.height - 0.5;
+
+      const rotateX = percentY * -5;
+      const rotateY = percentX * 5;
+
+      element.style.transform = `
+        perspective(1000px)
         rotateX(${rotateX}deg)
         rotateY(${rotateY}deg)
-        translateY(-6px)
+        translateY(-5px)
       `;
-    };
+    }
 
-    const leave = () => {
-      panel.style.transform = `
-        perspective(900px)
+    function handleMouseLeave() {
+      element.style.transform = `
+        perspective(1000px)
         rotateX(0deg)
         rotateY(0deg)
-        translateY(0)
+        translateY(0px)
       `;
-    };
+    }
 
-    panel.addEventListener("mousemove", move);
-    panel.addEventListener("mouseleave", leave);
+    element.addEventListener("mousemove", handleMouseMove);
+    element.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      panel.removeEventListener("mousemove", move);
-      panel.removeEventListener("mouseleave", leave);
+      element.removeEventListener("mousemove", handleMouseMove);
+      element.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
 
   return (
-    <div
-      ref={panelRef}
-      className={`rw-panel ${className}`}
-    >
+    <div ref={ref} className={`rw-panel ${className}`}>
       {children}
     </div>
   );
 }
 
-function SmallIcon({ children }) {
-  return (
-    <div className="rw-icon">
-      {children}
-    </div>
-  );
+function Icon({ children }) {
+  return <div className="rw-icon">{children}</div>;
+}
+
+function Avatar() {
+  return <div className="rw-avatar" />;
 }
 
 export default function Home() {
   return (
     <div className="rw-home">
 
-      {/* BACKGROUND */}
+      {/* Animated background */}
       <div className="rw-background">
+        <div className="rw-dots" />
         <div className="rw-grid" />
-        <div className="rw-glow rw-glow-one" />
-        <div className="rw-glow rw-glow-two" />
+
+        <div className="rw-glow rw-glow-1" />
+        <div className="rw-glow rw-glow-2" />
       </div>
 
-      {/* NAVBAR */}
-      <header className="rw-navbar">
+      {/* Navigation */}
+      <header className="rw-nav">
 
         <div className="rw-logo">
           <span>Ro</span>Wave
         </div>
 
-        <nav>
+        <nav className="rw-nav-links">
           <a href="#features">Features</a>
           <a href="#sessions">Sessions</a>
+          <a href="#servers">Servers</a>
           <a href="#organizations">Organizations</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#support">Support</a>
         </nav>
 
-        <button className="rw-signin">
+        <button className="rw-nav-button">
           Sign In
         </button>
 
       </header>
 
-      {/* HERO */}
+      {/* Hero */}
       <section className="rw-hero">
 
-        <div className="rw-badge">
-          <span />
-          The management hub built for Roblox communities
+        <div className="rw-pill">
+          <span className="rw-status-dot" />
+          Built for Roblox communities
         </div>
 
         <h1>
-          Everything your Roblox
+          Your community.
           <br />
-          organization needs.
+          <span>One powerful hub.</span>
         </h1>
 
         <p>
-          Manage players, sessions, moderation, servers,
-          ranks and your entire organization from one
-          powerful dashboard.
+          RoWave brings your Roblox organization, staff,
+          sessions, servers and moderation together in one
+          beautifully designed management platform.
         </p>
 
         <div className="rw-hero-buttons">
-          <button className="rw-primary">
-            Get Started →
+
+          <button className="rw-primary-button">
+            Get Started
+            <span>→</span>
           </button>
 
-          <button className="rw-secondary">
+          <button className="rw-secondary-button">
             Explore RoWave
           </button>
+
         </div>
 
       </section>
 
-      {/* FEATURES */}
+      {/* Feature heading */}
       <section id="features" className="rw-features">
 
-        <div className="rw-section-title">
+        <div className="rw-section-heading">
 
-          <span>ONE DASHBOARD</span>
+          <span>POWERFUL MANAGEMENT</span>
 
           <h2>
-            Run your organization
+            Everything you need.
             <br />
-            from one place.
+            Nothing you don't.
           </h2>
 
           <p>
-            RoWave connects your Roblox game, Discord community,
-            staff team and sessions into one management system.
+            A single place for your Roblox organization
+            to manage everything that matters.
           </p>
 
         </div>
 
-        <div className="rw-feature-grid">
+        <div className="rw-cards">
 
-          {/* SESSION */}
-          <MousePanel className="rw-feature large">
+          {/* SESSION CARD */}
+          <HoverPanel
+            className="rw-card rw-card-large"
+          >
 
-            <div className="rw-feature-top">
+            <div className="rw-card-heading">
 
               <div>
-                <SmallIcon>◈</SmallIcon>
+                <Icon>◈</Icon>
 
                 <h3>Sessions</h3>
 
                 <p>
-                  Create and manage sessions, attendees,
-                  phases, ranks and promotions in real time.
+                  Host and manage your sessions with
+                  powerful real-time tools.
                 </p>
               </div>
 
-              <span className="rw-live">
-                ● LIVE
-              </span>
+              <div className="rw-live">
+                <span />
+                LIVE
+              </div>
 
             </div>
 
-            <div className="rw-preview">
+            <div className="rw-session-preview">
 
-              <div className="rw-preview-header">
+              <div className="rw-preview-top">
 
                 <div>
                   <strong>Staff Training</strong>
                   <small>Hosted by @RoWaveAdmin</small>
                 </div>
 
-                <span className="rw-phase">
+                <div className="rw-phase">
+                  PHASE 2
+                </div>
+
+              </div>
+
+              <div className="rw-progress">
+
+                <div className="rw-progress-item active">
+                  <span>✓</span>
+                  Phase 1
+                </div>
+
+                <div className="rw-line active" />
+
+                <div className="rw-progress-item active">
+                  <span>✓</span>
                   Phase 2
-                </span>
+                </div>
+
+                <div className="rw-line" />
+
+                <div className="rw-progress-item">
+                  <span>3</span>
+                  Phase 3
+                </div>
 
               </div>
 
               {[
-                "coolbuilder22",
-                "PlayerOne",
-                "RobloxAdmin"
-              ].map((name, i) => (
+                ["coolbuilder22", "Host"],
+                ["PlayerOne", "Attendee"],
+                ["RobloxAdmin", "Attendee"],
+              ].map(([name, role]) => (
 
-                <div className="rw-player" key={name}>
+                <div className="rw-session-player" key={name}>
 
-                  <div className="rw-player-left">
+                  <div className="rw-player-info">
 
-                    <div className="rw-avatar" />
+                    <Avatar />
 
                     <div>
                       <strong>{name}</strong>
-                      <small>Attendee</small>
+                      <small>{role}</small>
                     </div>
 
                   </div>
 
-                  <div className="rw-checks">
-                    <i className="checked" />
-                    <i className="checked" />
-                    <i className={i === 0 ? "checked" : ""} />
+                  <div className="rw-phase-checks">
+                    <i className="active" />
+                    <i className="active" />
+                    <i />
                   </div>
 
                 </div>
 
               ))}
 
-              <button className="rw-join">
-                Join Server →
+              <button className="rw-join-button">
+                Join Server
+                <span>→</span>
               </button>
 
             </div>
 
-          </MousePanel>
+          </HoverPanel>
 
-          {/* MOD CALLS */}
-          <MousePanel className="rw-feature large">
+          {/* MOD CALL CARD */}
+          <HoverPanel
+            className="rw-card rw-card-large"
+          >
 
-            <SmallIcon>✦</SmallIcon>
+            <Icon>✦</Icon>
 
             <h3>Mod Calls</h3>
 
             <p>
-              Staff can receive, claim and resolve moderation
-              calls without leaving the dashboard.
+              Let players contact your staff team
+              instantly when they need help.
             </p>
 
-            <div className="rw-preview">
+            <div className="rw-mod-preview">
 
-              <div className="rw-call-user">
+              <div className="rw-mod-header">
 
-                <div className="rw-avatar blue" />
+                <div className="rw-player-info">
 
-                <div>
-                  <strong>coolbuilder22</strong>
-                  <small>Called for a moderator</small>
+                  <Avatar />
+
+                  <div>
+                    <strong>coolbuilder22</strong>
+                    <small>@coolbuilder22</small>
+                  </div>
+
                 </div>
 
-                <span className="rw-new">
-                  New
+                <span className="rw-new-call">
+                  NEW
                 </span>
 
               </div>
 
-              <div className="rw-reason">
+              <div className="rw-mod-details">
 
-                <small>REASON</small>
+                <span>MOD CALL REASON</span>
 
                 <p>
                   Player is breaking the server rules.
@@ -259,43 +297,54 @@ export default function Home() {
 
               </div>
 
-              <div className="rw-call-buttons">
+              <div className="rw-mod-actions">
 
-                <button>Claim</button>
-                <button>Dismiss</button>
-                <button>Join Server</button>
+                <button className="blue">
+                  Claim
+                </button>
+
+                <button>
+                  Dismiss
+                </button>
+
+                <button>
+                  Join Server
+                </button>
 
               </div>
 
             </div>
 
-          </MousePanel>
+          </HoverPanel>
 
-          {/* SERVERS */}
-          <MousePanel className="rw-feature">
+          {/* SERVER CARD */}
+          <HoverPanel
+            id="servers"
+            className="rw-card"
+          >
 
-            <SmallIcon>⌁</SmallIcon>
+            <Icon>⌁</Icon>
 
             <h3>Live Servers</h3>
 
             <p>
-              See your active Roblox servers and join them
-              directly from RoWave.
+              View active servers, players and
+              connection information.
             </p>
 
-            <div className="rw-server-list">
+            <div className="rw-server-preview">
 
               {[
                 ["Server #4812", "17 / 30", "62ms"],
                 ["Server #2941", "23 / 30", "71ms"],
-                ["Server #7305", "8 / 30", "48ms"]
+                ["Server #7305", "8 / 30", "48ms"],
               ].map(([server, players, ping]) => (
 
                 <div className="rw-server" key={server}>
 
-                  <div className="rw-server-name">
+                  <div className="rw-server-left">
 
-                    <span className="online" />
+                    <span className="rw-online" />
 
                     <div>
                       <strong>{server}</strong>
@@ -306,7 +355,7 @@ export default function Home() {
 
                   </div>
 
-                  <div className="rw-server-stats">
+                  <div className="rw-server-right">
                     <strong>{players}</strong>
                     <small>{ping}</small>
                   </div>
@@ -317,21 +366,21 @@ export default function Home() {
 
             </div>
 
-          </MousePanel>
+          </HoverPanel>
 
-          {/* ORGANIZATION */}
-          <MousePanel
-            className="rw-feature"
+          {/* ORGANIZATION CARD */}
+          <HoverPanel
             id="organizations"
+            className="rw-card"
           >
 
-            <SmallIcon>＋</SmallIcon>
+            <Icon>＋</Icon>
 
             <h3>Create an Organization</h3>
 
             <p>
-              Connect your Roblox community and build your
-              management workspace in seconds.
+              Connect your Roblox community and
+              create your RoWave organization.
             </p>
 
             <div className="rw-org-preview">
@@ -340,11 +389,11 @@ export default function Home() {
                 ROBLOX COMMUNITY
               </label>
 
-              <div className="rw-input-row">
+              <div className="rw-org-input">
 
-                <div className="rw-input">
+                <span>
                   Paste community URL...
-                </div>
+                </span>
 
                 <button>
                   Connect
@@ -352,50 +401,51 @@ export default function Home() {
 
               </div>
 
-              <small className="rw-verified">
-                ● Ownership will be verified automatically
-              </small>
+              <div className="rw-verification">
+                <span>✓</span>
+                Ownership automatically verified
+              </div>
 
             </div>
 
-          </MousePanel>
+          </HoverPanel>
 
         </div>
 
       </section>
 
-      {/* CTA */}
-      <section className="rw-cta">
+      {/* Bottom CTA */}
+      <section className="rw-bottom">
 
-        <span>READY?</span>
+        <span>START TODAY</span>
 
         <h2>
-          Your organization.
+          Ready to build
           <br />
-          One powerful hub.
+          something better?
         </h2>
 
         <p>
-          Connect your Roblox community and start managing
-          everything through RoWave.
+          Bring your Roblox organization to RoWave.
         </p>
 
-        <button className="rw-primary">
-          Create Organization →
+        <button className="rw-primary-button">
+          Create Organization
+          <span>→</span>
         </button>
 
       </section>
 
-      {/* FOOTER */}
-      <footer>
+      {/* Footer */}
+      <footer className="rw-footer">
 
         <div className="rw-logo">
           <span>Ro</span>Wave
         </div>
 
-        <small>
-          © 2026 RoWave. Built for Roblox communities.
-        </small>
+        <div>
+          © 2026 RoWave
+        </div>
 
       </footer>
 
