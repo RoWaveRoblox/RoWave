@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoWave — Create Organization</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #050505;
+      --card: #0f0f0f;
+      --border: rgba(255,255,255,0.08);
+      --text: #fff;
+      --muted: #94a3b8;
+      --primary: #3B82F6;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .back:hover { color: white; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 2.5rem;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 0.45rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.9rem 1.1rem;
+      background: #111;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+    }
+
+    input::placeholder {
+      color: #64748b;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.45rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.95rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #2563EB;
+    }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.06);
+      color: white;
+      border: 1px solid var(--border);
+      margin-top: 0.75rem;
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* States */
+    .result {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      border-radius: 0.85rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .result.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #4ade80;
+    }
+
+    .result.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+
+    .result.loading {
+      display: block;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+    }
+
+    .group-preview {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 0.85rem;
+    }
+
+    .group-preview.active {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .group-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 0.75rem;
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .group-info h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .group-info p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .requirements {
+      margin-top: 1.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .requirements h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #cbd5e1;
+    }
+
+    .req-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .req-item .check {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+    }
+
+    .req-item.passed .check {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="dashboard.html" class="back">← Back to Organizations</a>
+
+    <div class="card">
+      <h1>Create Organization</h1>
+      <p class="subtitle">
+        Paste a link to your Roblox group or community. You must hold the <strong>highest rank</strong> in the group to generate it.
+      </p>
+
+      <div class="form-group">
+        <label>Roblox Group / Community Link</label>
+        <input 
+          type="text" 
+          id="groupLink" 
+          placeholder="https://www.roblox.com/groups/1234567/My-Group"
+          oninput="detectGroup()"
+        />
+        <div class="hint">Supports roblox.com/groups/... links</div>
+      </div>
+
+      <!-- Group Preview -->
+      <div class="group-preview" id="groupPreview">
+        <div class="group-icon" id="groupIcon">?</div>
+        <div class="group-info">
+          <h3 id="groupName">Group Name</h3>
+          <p id="groupId">ID: —</p>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="createBtn" onclick="createOrganization()" disabled>
+        Create Organization
+      </button>
+
+      <div class="result" id="resultBox"></div>
+
+      <div class="requirements">
+        <h4>Requirements</h4>
+        <div class="req-item" id="req1">
+          <div class="check">1</div>
+          <span>Valid Roblox group link</span>
+        </div>
+        <div class="req-item" id="req2">
+          <div class="check">2</div>
+          <span>You must have the highest rank in the group</span>
+        </div>
+        <div class="req-item" id="req3">
+          <div class="check">3</div>
+          <span>Group must not already be claimed on RoWave</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let detectedGroupId = null;
+    let detectedGroupName = null;
+
+    function detectGroup() {
+      const input = document.getElementById('groupLink').value.trim();
+      const preview = document.getElementById('groupPreview');
+      const createBtn = document.getElementById('createBtn');
+      const resultBox = document.getElementById('resultBox');
+
+      // Reset
+      resultBox.className = 'result';
+      resultBox.style.display = 'none';
+      document.getElementById('req1').classList.remove('passed');
+      document.getElementById('req2').classList.remove('passed');
+      document.getElementById('req3').classList.remove('passed');
+
+      // Simple regex to extract group ID
+      const match = input.match(/groups\/(\d+)/i);
+
+      if (match && match[1]) {
+        detectedGroupId = match[1];
+        detectedGroupName = "Detected Group " + detectedGroupId; // In real version we fetch the real name
+
+        document.getElementById('groupIcon').textContent = detectedGroupId.slice(-2);
+        document.getElementById('groupName').textContent = detectedGroupName;
+        document.getElementById('groupId').textContent = "ID: " + detectedGroupId;
+
+        preview.classList.add('active');
+        createBtn.disabled = false;
+
+        document.getElementById('req1').classList.add('passed');
+      } else {
+        detectedGroupId = null;
+        preview.classList.remove('active');
+        createBtn.disabled = true;
+      }
+    }
+
+    function createOrganization() {
+      if (!detectedGroupId) return;
+
+      const resultBox = document.getElementById('resultBox');
+      const createBtn = document.getElementById('createBtn');
+
+      // Show loading
+      resultBox.className = 'result loading';
+      resultBox.textContent = 'Checking group ownership and highest rank...';
+      createBtn.disabled = true;
+
+      // MOCK: Simulate API check (in real version this calls Roblox API + your backend)
+      setTimeout(() => {
+        // 70% chance of success for demo
+        const success = Math.random() > 0.3;
+
+        if (success) {
+          document.getElementById('req2').classList.add('passed');
+          document.getElementById('req3').classList.add('passed');
+
+          resultBox.className = 'result success';
+          resultBox.innerHTML = `
+            <strong>✓ Organization created successfully!</strong><br>
+            <span style="opacity:0.9">${detectedGroupName} is now available in your dashboard.</span>
+          `;
+
+          // In real version: redirect to dashboard or the new org
+          setTimeout(() => {
+            if (confirm('Organization created! Go to dashboard?')) {
+              window.location.href = 'dashboard.html';
+            }
+          }, 1000);
+        } else {
+          resultBox.className = 'result error';
+          resultBox.innerHTML = `
+            <strong>Error: Highest rank required</strong><br>
+            You must hold the highest rank in this group to create an organization on RoWave.
+          `;
+          createBtn.disabled = false;
+        }
+      }, 1600);
+    }
+  </script>
+</body>
+</html>
