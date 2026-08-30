@@ -7,11 +7,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', system-ui, sans-serif;
@@ -22,13 +18,10 @@
       position: relative;
     }
 
-    /* Animated dots background */
     #canvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: 0;
       pointer-events: none;
     }
@@ -44,7 +37,6 @@
       pointer-events: none;
     }
 
-    /* Navbar */
     nav {
       position: relative;
       z-index: 10;
@@ -62,11 +54,9 @@
       letter-spacing: -0.5px;
       display: flex;
       align-items: center;
-      gap: 0.15rem;
       text-decoration: none;
       color: inherit;
     }
-
     .logo .ro { color: #3B82F6; }
     .logo .wave { color: #fff; }
 
@@ -75,7 +65,6 @@
       gap: 2rem;
       align-items: center;
     }
-
     .nav-links a {
       color: #94a3b8;
       text-decoration: none;
@@ -83,7 +72,6 @@
       font-size: 0.95rem;
       transition: color 0.2s;
     }
-
     .nav-links a:hover { color: #fff; }
 
     .btn {
@@ -99,34 +87,34 @@
       transition: all 0.2s;
       text-decoration: none;
     }
-
     .btn-primary {
       background: #3B82F6;
       color: white;
     }
-
     .btn-primary:hover {
       background: #2563EB;
       transform: translateY(-1px);
     }
-
     .btn-secondary {
       background: rgba(255,255,255,0.08);
       color: white;
       border: 1px solid rgba(255,255,255,0.15);
     }
-
     .btn-secondary:hover {
       background: rgba(255,255,255,0.12);
     }
+    .btn-ghost {
+      background: rgba(255,255,255,0.06);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
 
-    /* Hero */
     .hero {
       position: relative;
       z-index: 5;
       max-width: 1100px;
       margin: 0 auto;
-      padding: 5rem 2rem 4rem;
+      padding: 5rem 2rem 3rem;
       text-align: center;
     }
 
@@ -151,7 +139,6 @@
       margin-bottom: 1.5rem;
       letter-spacing: -1.5px;
     }
-
     .hero h1 .blue { color: #3B82F6; }
 
     .hero p {
@@ -169,13 +156,12 @@
       flex-wrap: wrap;
     }
 
-    /* Features preview */
     .features {
       position: relative;
       z-index: 5;
       max-width: 1100px;
       margin: 0 auto;
-      padding: 2rem 2rem 5rem;
+      padding: 1rem 2rem 5rem;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1.25rem;
@@ -186,26 +172,28 @@
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: 1rem;
       padding: 1.5rem;
-      transition: border-color 0.2s;
     }
-
-    .feature-card:hover {
-      border-color: rgba(59, 130, 246, 0.3);
-    }
-
     .feature-card h3 {
       font-size: 1.05rem;
       font-weight: 600;
       margin-bottom: 0.4rem;
     }
-
     .feature-card p {
       font-size: 0.9rem;
       color: #94a3b8;
       line-height: 1.5;
     }
 
-    /* Modal */
+    .footer-note {
+      text-align: center;
+      color: #475569;
+      font-size: 0.85rem;
+      padding: 0 1rem 3rem;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* Login Modal */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -217,7 +205,6 @@
       justify-content: center;
       padding: 1rem;
     }
-
     .modal-overlay.active { display: flex; }
 
     .modal {
@@ -228,7 +215,6 @@
       max-width: 440px;
       padding: 2.5rem;
       position: relative;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
     }
 
     .modal h2 {
@@ -236,17 +222,13 @@
       font-weight: 700;
       margin-bottom: 0.4rem;
     }
-
     .modal .subtitle {
       color: #94a3b8;
       margin-bottom: 1.75rem;
       font-size: 0.95rem;
     }
 
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-
+    .form-group { margin-bottom: 1.2rem; }
     .form-group label {
       display: block;
       font-size: 0.85rem;
@@ -254,7 +236,6 @@
       color: #cbd5e1;
       margin-bottom: 0.4rem;
     }
-
     .form-group input {
       width: 100%;
       padding: 0.85rem 1rem;
@@ -264,12 +245,8 @@
       color: white;
       font-size: 1rem;
       outline: none;
-      transition: border 0.2s;
     }
-
-    .form-group input:focus {
-      border-color: #3B82F6;
-    }
+    .form-group input:focus { border-color: #3B82F6; }
 
     .code-box {
       background: #111;
@@ -292,14 +269,12 @@
       text-align: center;
       display: none;
     }
-
     .status.success {
       background: rgba(34, 197, 94, 0.15);
       color: #4ade80;
       border: 1px solid rgba(34, 197, 94, 0.3);
       display: block;
     }
-
     .status.error {
       background: rgba(239, 68, 68, 0.15);
       color: #f87171;
@@ -316,27 +291,21 @@
       gap: 0.75rem;
       margin: 1.25rem 0;
     }
-
     .theme-card {
       background: #111;
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 0.85rem;
       padding: 1rem;
       cursor: pointer;
-      transition: all 0.2s;
       text-align: center;
+      transition: all 0.2s;
     }
-
     .theme-card:hover { border-color: #3B82F6; }
     .theme-card.selected {
       border-color: #3B82F6;
       background: rgba(59, 130, 246, 0.1);
     }
-
-    .theme-card.locked {
-      opacity: 0.55;
-    }
-
+    .theme-card.locked { opacity: 0.55; }
     .theme-card .lock {
       font-size: 0.75rem;
       color: #f59e0b;
@@ -354,16 +323,45 @@
       cursor: pointer;
       line-height: 1;
     }
-
     .close-btn:hover { color: white; }
 
-    .footer-note {
+    /* Custom Modal */
+    .custom-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .custom-modal-overlay.show { display: flex; }
+
+    .custom-modal {
+      background: #0f0f0f;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1rem;
+      padding: 1.75rem;
+      max-width: 400px;
+      width: 100%;
       text-align: center;
-      color: #475569;
-      font-size: 0.85rem;
-      padding: 1rem 1rem 3rem;
-      position: relative;
-      z-index: 5;
+    }
+    .custom-modal h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .custom-modal p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .custom-modal-buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
     }
   </style>
 </head>
@@ -404,9 +402,7 @@
       <button class="btn btn-primary" onclick="openModal()">
         Sign in or Up TODAY →
       </button>
-      <button class="btn btn-secondary">
-        Watch the demo
-      </button>
+      <button class="btn btn-secondary">Watch the demo</button>
     </div>
   </section>
 
@@ -439,17 +435,16 @@
     <div class="modal">
       <button class="close-btn" onclick="closeModal()">×</button>
 
-      <!-- Step 1: Discord -->
+      <!-- Step 1 -->
       <div class="step active" id="step1">
         <h2>Welcome to RoWave</h2>
         <p class="subtitle">Sign in with Discord to get started</p>
         <button class="btn btn-primary" style="width:100%; justify-content:center; padding:1rem;" onclick="goToStep(2)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
           Continue with Discord
         </button>
       </div>
 
-      <!-- Step 2: Roblox Verification -->
+      <!-- Step 2 -->
       <div class="step" id="step2">
         <h2>Verify your Roblox</h2>
         <p class="subtitle">We use the description method to securely link your account</p>
@@ -475,7 +470,7 @@
         </div>
       </div>
 
-      <!-- Step 3: Onboarding -->
+      <!-- Step 3 -->
       <div class="step" id="step3">
         <h2>Almost there!</h2>
         <p class="subtitle">Quick questions so we can personalize RoWave for you</p>
@@ -498,18 +493,18 @@
             <div style="font-weight:600;">White Mode</div>
             <div style="font-size:0.8rem; color:#94a3b8;">Free</div>
           </div>
-          <div class="theme-card locked" onclick="alert('Requires Wave gamepass (1962126546) or 7-day trial')">
+          <div class="theme-card locked" onclick="showModal('Wave Mode Locked', 'This theme requires the Wave gamepass or a 7-day trial.')">
             <div style="font-weight:600;">Wave Mode</div>
             <div class="lock">🔒 Gamepass</div>
           </div>
-          <div class="theme-card locked" onclick="alert('Requires Glass gamepass (1962114572) or 7-day trial')">
+          <div class="theme-card locked" onclick="showModal('Glass Mode Locked', 'This theme requires the Glass gamepass or a 7-day trial.')">
             <div style="font-weight:600;">Glass Mode</div>
             <div class="lock">🔒 Gamepass</div>
           </div>
         </div>
 
         <button class="btn btn-primary" style="width:100%; margin-top:0.5rem;" onclick="finishOnboarding()">
-          Enter RoWave →
+          Continue →
         </button>
         <button class="btn btn-secondary" style="width:100%; margin-top:0.75rem;" onclick="finishOnboarding()">
           Skip (use Dark Mode)
@@ -518,8 +513,19 @@
     </div>
   </div>
 
+  <!-- Custom Modal -->
+  <div class="custom-modal-overlay" id="customModal">
+    <div class="custom-modal">
+      <h3 id="modalTitle">Title</h3>
+      <p id="modalMessage">Message</p>
+      <div class="custom-modal-buttons">
+        <button class="btn btn-primary" id="modalOk">OK</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // ===== Animated Dots =====
+    // Animated dots
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let dots = [];
@@ -572,16 +578,29 @@
     }
     animate();
 
-    // ===== Modal Logic =====
+    // Custom Modal
+    function showModal(title, message) {
+      return new Promise((resolve) => {
+        const overlay = document.getElementById('customModal');
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalMessage').textContent = message;
+        overlay.classList.add('show');
+
+        document.getElementById('modalOk').onclick = () => {
+          overlay.classList.remove('show');
+          resolve(true);
+        };
+      });
+    }
+
+    // Login Modal
     function openModal() {
       document.getElementById('modal').classList.add('active');
       goToStep(1);
     }
-
     function closeModal() {
       document.getElementById('modal').classList.remove('active');
     }
-
     function goToStep(n) {
       document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
       document.getElementById('step' + n).classList.add('active');
@@ -592,7 +611,7 @@
     function generateCode() {
       const user = document.getElementById('robloxUser').value.trim();
       if (!user) {
-        alert('Please enter your Roblox username');
+        showModal('Missing Username', 'Please enter your Roblox username first.');
         return;
       }
       currentCode = 'RoWave-' + Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -604,7 +623,6 @@
 
     function checkVerification() {
       const status = document.getElementById('statusMsg');
-      // Mock verification (70% success rate for demo)
       const success = Math.random() > 0.3;
 
       if (success) {
@@ -623,11 +641,10 @@
     }
 
     function finishOnboarding() {
-      // Redirect to the dashboard
-      window.location.href = 'dashboard.html';
+      // Go to Create Organization first
+      window.location.href = 'create-org.html';
     }
 
-    // Close modal when clicking outside
     document.getElementById('modal').addEventListener('click', function(e) {
       if (e.target === this) closeModal();
     });
