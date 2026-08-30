@@ -29,7 +29,6 @@
       display: flex;
     }
 
-    /* Left attendee list */
     .attendee-panel {
       width: 320px;
       background: #0a0a0a;
@@ -44,17 +43,8 @@
       padding: 1.25rem;
       border-bottom: 1px solid var(--border);
     }
-
-    .panel-header h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .panel-header p {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 0.2rem;
-    }
+    .panel-header h2 { font-size: 1.1rem; font-weight: 700; }
+    .panel-header p { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
 
     .attendee-list {
       flex: 1;
@@ -72,7 +62,6 @@
       cursor: pointer;
       transition: background 0.15s;
     }
-
     .attendee:hover { background: rgba(255,255,255,0.04); }
     .attendee.selected { background: rgba(59,130,246,0.12); }
 
@@ -89,11 +78,7 @@
       flex-shrink: 0;
     }
 
-    .attendee-info {
-      flex: 1;
-      min-width: 0;
-    }
-
+    .attendee-info { flex: 1; min-width: 0; }
     .attendee-name {
       font-weight: 600;
       font-size: 0.9rem;
@@ -101,17 +86,9 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .attendee-role { font-size: 0.75rem; color: var(--muted); }
 
-    .attendee-role {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .phase-checks {
-      display: flex;
-      gap: 0.35rem;
-    }
-
+    .phase-checks { display: flex; gap: 0.35rem; }
     .phase-check {
       width: 18px;
       height: 18px;
@@ -123,20 +100,12 @@
       font-size: 0.7rem;
       cursor: pointer;
     }
-
     .phase-check.passed {
       background: var(--success);
       border-color: var(--success);
       color: white;
     }
 
-    .phase-check.perfect {
-      background: #8b5cf6;
-      border-color: #8b5cf6;
-      color: white;
-    }
-
-    /* Main content */
     .main {
       margin-left: 320px;
       flex: 1;
@@ -176,10 +145,7 @@
       border-radius: 9999px;
     }
 
-    .top-actions {
-      display: flex;
-      gap: 0.6rem;
-    }
+    .top-actions { display: flex; gap: 0.6rem; }
 
     .btn {
       display: inline-flex;
@@ -193,7 +159,6 @@
       border: none;
       transition: all 0.15s;
     }
-
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: #2563EB; }
     .btn-ghost {
@@ -208,7 +173,6 @@
       border: 1px solid rgba(239,68,68,0.3);
     }
 
-    /* Tabs */
     .tabs {
       display: flex;
       gap: 0.25rem;
@@ -216,7 +180,6 @@
       border-bottom: 1px solid var(--border);
       background: #0a0a0a;
     }
-
     .tab {
       padding: 0.9rem 1.25rem;
       font-weight: 500;
@@ -224,19 +187,14 @@
       color: var(--muted);
       cursor: pointer;
       border-bottom: 2px solid transparent;
-      transition: all 0.15s;
     }
-
     .tab:hover { color: white; }
     .tab.active {
       color: #93c5fd;
       border-bottom-color: var(--primary);
     }
 
-    .content {
-      padding: 1.75rem;
-      flex: 1;
-    }
+    .content { padding: 1.75rem; flex: 1; }
 
     .card {
       background: var(--card);
@@ -245,21 +203,18 @@
       padding: 1.5rem;
       margin-bottom: 1.25rem;
     }
-
     .card-title {
       font-size: 1.05rem;
       font-weight: 600;
       margin-bottom: 1rem;
     }
 
-    /* Phase bar */
     .phase-bar {
       display: flex;
       gap: 0.75rem;
       margin-bottom: 1.5rem;
       flex-wrap: wrap;
     }
-
     .phase-pill {
       padding: 0.5rem 1rem;
       border-radius: 9999px;
@@ -268,56 +223,68 @@
       border: 1px solid var(--border);
       background: rgba(255,255,255,0.04);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
     }
-
     .phase-pill.active {
       background: rgba(59,130,246,0.15);
       border-color: var(--primary);
       color: #93c5fd;
     }
-
     .phase-pill.completed {
       background: rgba(34,197,94,0.12);
       border-color: rgba(34,197,94,0.4);
       color: #4ade80;
     }
 
-    /* Grid */
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-
-    .role-select {
-      background: #111;
-      border: 1px solid var(--border);
-      color: white;
-      padding: 0.4rem 0.6rem;
-      border-radius: 0.4rem;
-      font-size: 0.85rem;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 2.5rem;
-      color: var(--muted);
-    }
 
     .view-section { display: none; }
     .view-section.active { display: block; }
+
+    /* Custom Modal */
+    .custom-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .custom-modal-overlay.show { display: flex; }
+
+    .custom-modal {
+      background: #0f0f0f;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1rem;
+      padding: 1.75rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .custom-modal h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .custom-modal p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .custom-modal-buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
   </style>
 </head>
 <body>
-  <!-- Left Attendee Panel -->
+  <!-- Left Panel -->
   <div class="attendee-panel">
     <div class="panel-header">
       <h2>Attendees</h2>
       <p>12 people • Phase 2 of 3</p>
     </div>
-
-    <div class="attendee-list" id="attendeeList">
-      <!-- Populated by JS -->
-    </div>
+    <div class="attendee-list" id="attendeeList"></div>
   </div>
 
   <!-- Main -->
@@ -328,10 +295,10 @@
         <span class="live-badge">● Live</span>
       </div>
       <div class="top-actions">
-        <button class="btn btn-ghost" onclick="alert('Opening Roblox server...')">Join Server</button>
-        <button class="btn btn-ghost">End Phase</button>
-        <button class="btn btn-primary">Start Next Phase</button>
-        <button class="btn btn-danger">Conclude Session</button>
+        <button class="btn btn-ghost" onclick="joinServer()">Join Server</button>
+        <button class="btn btn-ghost" onclick="endPhase()">End Phase</button>
+        <button class="btn btn-primary" onclick="startNextPhase()">Start Next Phase</button>
+        <button class="btn btn-danger" onclick="concludeSession()">Conclude Session</button>
       </div>
     </div>
 
@@ -343,24 +310,23 @@
     </div>
 
     <div class="content">
-      <!-- MANAGE TAB -->
+      <!-- MANAGE -->
       <div class="view-section active" id="tab-manage">
         <div class="phase-bar">
           <div class="phase-pill completed">1. Briefing ✓</div>
           <div class="phase-pill active">2. Practical</div>
           <div class="phase-pill">3. Evaluation</div>
-          <div class="phase-pill" style="opacity:0.5;">+ Add Phase</div>
         </div>
 
         <div class="card">
           <div class="card-title">Current Phase: Practical</div>
           <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.25rem;">
-            Mark attendees as they complete this phase. Use the checkboxes on the left.
+            Mark attendees as they complete this phase using the checkboxes on the left.
           </p>
           <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-            <button class="btn btn-primary" onclick="markSelected('passed')">Mark Selected as Passed</button>
-            <button class="btn btn-ghost" onclick="markSelected('perfect')">Mark as Perfect Pass</button>
-            <button class="btn btn-ghost">Give Warning</button>
+            <button class="btn btn-primary" onclick="markPassed()">Mark Selected as Passed</button>
+            <button class="btn btn-ghost" onclick="markPerfect()">Mark as Perfect Pass</button>
+            <button class="btn btn-ghost" onclick="giveWarning()">Give Warning</button>
           </div>
         </div>
 
@@ -368,24 +334,20 @@
           <div class="card">
             <div class="card-title">Session Staff</div>
             <div style="display:flex; flex-direction:column; gap:0.75rem;">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; justify-content:space-between;">
                 <div>
                   <div style="font-weight:600;">REDmonster776</div>
                   <div style="font-size:0.8rem; color:var(--muted);">Host</div>
                 </div>
                 <span style="font-size:0.8rem; color:var(--primary);">You</span>
               </div>
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                  <div style="font-weight:600;">Playingwithfire170</div>
-                  <div style="font-size:0.8rem; color:var(--muted);">Co-Host</div>
-                </div>
+              <div>
+                <div style="font-weight:600;">Playingwithfire170</div>
+                <div style="font-size:0.8rem; color:var(--muted);">Co-Host</div>
               </div>
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                  <div style="font-weight:600;">Jimpoun5b</div>
-                  <div style="font-size:0.8rem; color:var(--muted);">Co-Host</div>
-                </div>
+              <div>
+                <div style="font-weight:600;">Jimpoun5b</div>
+                <div style="font-size:0.8rem; color:var(--muted);">Co-Host</div>
               </div>
             </div>
           </div>
@@ -393,16 +355,15 @@
           <div class="card">
             <div class="card-title">Quick Actions</div>
             <div style="display:flex; flex-direction:column; gap:0.6rem;">
-              <button class="btn btn-ghost" style="justify-content:flex-start;">Change Session Type</button>
-              <button class="btn btn-ghost" style="justify-content:flex-start;">Edit Phases (max 5 free / +5 with pass)</button>
-              <button class="btn btn-ghost" style="justify-content:flex-start;">Post to Discord Sessions Channel</button>
-              <button class="btn btn-ghost" style="justify-content:flex-start;">Lock Session</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;" onclick="showModal('Coming Soon', 'This feature will be available soon.')">Change Session Type</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;" onclick="showModal('Coming Soon', 'Phase editing will be available soon.')">Edit Phases</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;" onclick="showModal('Posted', 'Session has been posted to the Discord channel.')">Post to Discord</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- PLAYER MANAGEMENT TAB -->
+      <!-- PLAYER MANAGEMENT -->
       <div class="view-section" id="tab-players">
         <div class="card">
           <div class="card-title">Player Management</div>
@@ -413,16 +374,16 @@
         </div>
       </div>
 
-      <!-- OVERVIEW TAB -->
+      <!-- OVERVIEW -->
       <div class="view-section" id="tab-overview">
         <div class="grid-2">
           <div class="card">
             <div class="card-title">Performance Overview</div>
-            <div class="empty">FPS, Ping, and Grammar stats will appear here when available (Premium)</div>
+            <p style="color:var(--muted);">FPS, Ping, and Grammar stats will appear here (Premium)</p>
           </div>
           <div class="card">
             <div class="card-title">Session Stats</div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
               <div>
                 <div style="font-size:0.8rem; color:var(--muted);">Duration</div>
                 <div style="font-size:1.4rem; font-weight:700;">18m</div>
@@ -444,7 +405,7 @@
         </div>
       </div>
 
-      <!-- PASSING TAB -->
+      <!-- PASSING -->
       <div class="view-section" id="tab-passing">
         <div class="card">
           <div class="card-title">Players Who Passed</div>
@@ -457,8 +418,18 @@
     </div>
   </div>
 
+  <!-- Custom Modal -->
+  <div class="custom-modal-overlay" id="customModal">
+    <div class="custom-modal">
+      <h3 id="modalTitle">Title</h3>
+      <p id="modalMessage">Message</p>
+      <div class="custom-modal-buttons">
+        <button class="btn btn-primary" id="modalOk">OK</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Sample attendees
     const attendees = [
       { name: "GalaxyDestroyer672", role: "Attendee", phases: [true, false, false] },
       { name: "fiooh5", role: "Attendee", phases: [true, true, false] },
@@ -473,6 +444,19 @@
       { name: "Bencel314", role: "Attendee", phases: [true, false, false] },
       { name: "KKDink", role: "Attendee", phases: [true, true, false] }
     ];
+
+    function showModal(title, message) {
+      return new Promise((resolve) => {
+        const overlay = document.getElementById('customModal');
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalMessage').textContent = message;
+        overlay.classList.add('show');
+        document.getElementById('modalOk').onclick = () => {
+          overlay.classList.remove('show');
+          resolve(true);
+        };
+      });
+    }
 
     function renderAttendees() {
       const list = document.getElementById('attendeeList');
@@ -496,8 +480,7 @@
     }
 
     function renderPlayerManage() {
-      const list = document.getElementById('playerManageList');
-      list.innerHTML = attendees.map(a => `
+      document.getElementById('playerManageList').innerHTML = attendees.map(a => `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 0; border-bottom:1px solid var(--border);">
           <div style="display:flex; align-items:center; gap:0.75rem;">
             <div class="attendee-avatar">${a.name.slice(0,2).toUpperCase()}</div>
@@ -506,67 +489,72 @@
               <div style="font-size:0.8rem; color:var(--muted);">${a.role}</div>
             </div>
           </div>
-          <div style="display:flex; gap:0.5rem; align-items:center;">
-            <select class="role-select">
-              <option ${a.role==='Attendee'?'selected':''}>Attendee</option>
-              <option ${a.role==='Helper'?'selected':''}>Helper</option>
-              <option ${a.role==='Ranker'?'selected':''}>Ranker</option>
-              <option ${a.role==='Supervisor'?'selected':''}>Supervisor</option>
-              <option ${a.role==='Co-Host'?'selected':''}>Co-Host</option>
-              <option>Custom Rank</option>
-            </select>
-            <button class="btn btn-ghost" style="padding:0.3rem 0.6rem; font-size:0.8rem;">Remove</button>
-          </div>
+          <button class="btn btn-ghost" style="padding:0.3rem 0.6rem; font-size:0.8rem;" onclick="showModal('Removed', '${a.name} has been removed from the session.')">Remove</button>
         </div>
       `).join('');
     }
 
     function renderPassing() {
-      const passed = attendees.filter(a => a.phases[1]); // example: passed phase 2
-      const list = document.getElementById('passingList');
-      list.innerHTML = passed.map(a => `
+      const passed = attendees.filter(a => a.phases[1]);
+      document.getElementById('passingList').innerHTML = passed.map(a => `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 0; border-bottom:1px solid var(--border);">
           <div style="display:flex; align-items:center; gap:0.75rem;">
             <div class="attendee-avatar">${a.name.slice(0,2).toUpperCase()}</div>
             <div style="font-weight:600;">${a.name}</div>
           </div>
-          <select class="role-select">
-            <option>Select rank to promote...</option>
-            <option>Moderator</option>
-            <option>Senior Moderator</option>
-            <option>Admin</option>
-            <option>Custom...</option>
-          </select>
+          <button class="btn btn-primary" style="padding:0.35rem 0.8rem; font-size:0.8rem;" onclick="showModal('Promote', 'Promotion feature requires Premium or the correct gamepass.')">Promote</button>
         </div>
-      `).join('') || '<div class="empty">No players have passed yet</div>';
+      `).join('') || '<p style="color:var(--muted);">No players have passed yet</p>';
     }
 
-    function togglePhase(attendeeIdx, phaseIdx) {
-      attendees[attendeeIdx].phases[phaseIdx] = !attendees[attendeeIdx].phases[phaseIdx];
+    function togglePhase(i, pi) {
+      attendees[i].phases[pi] = !attendees[i].phases[pi];
       renderAttendees();
     }
 
-    function selectAttendee(idx) {
+    function selectAttendee(i) {
       document.querySelectorAll('.attendee').forEach(el => el.classList.remove('selected'));
-      document.querySelectorAll('.attendee')[idx].classList.add('selected');
+      document.querySelectorAll('.attendee')[i].classList.add('selected');
     }
 
-    function markSelected(type) {
-      alert(`Marked selected attendees as ${type === 'perfect' ? 'Perfect Pass' : 'Passed'} (demo)`);
+    function joinServer() {
+      showModal("Joining Server", "Opening Roblox and joining the session server...");
     }
 
-    // Tab switching
+    function endPhase() {
+      showModal("Phase Ended", "Current phase has been ended.");
+    }
+
+    function startNextPhase() {
+      showModal("Next Phase", "Starting the next phase...");
+    }
+
+    function concludeSession() {
+      showModal("Session Concluded", "The session has been concluded and logged.");
+    }
+
+    function markPassed() {
+      showModal("Marked as Passed", "Selected attendees have been marked as Passed.");
+    }
+
+    function markPerfect() {
+      showModal("Perfect Pass", "Selected attendees have been marked as Perfect Pass.");
+    }
+
+    function giveWarning() {
+      showModal("Warning Issued", "A warning has been issued to the selected player.");
+    }
+
+    // Tabs
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-
         document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
         document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
       });
     });
 
-    // Init
     renderAttendees();
     renderPlayerManage();
     renderPassing();
