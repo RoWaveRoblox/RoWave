@@ -16,7 +16,6 @@
       --primary: #3B82F6;
       --success: #22c55e;
       --danger: #ef4444;
-      --warning: #f59e0b;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -92,14 +91,8 @@
       outline: none;
       transition: border 0.2s;
     }
-
-    input:focus {
-      border-color: var(--primary);
-    }
-
-    input::placeholder {
-      color: #64748b;
-    }
+    input:focus { border-color: var(--primary); }
+    input::placeholder { color: #64748b; }
 
     .hint {
       font-size: 0.8rem;
@@ -121,58 +114,19 @@
       border: none;
       transition: all 0.2s;
     }
-
     .btn-primary {
       background: var(--primary);
       color: white;
     }
-    .btn-primary:hover {
-      background: #2563EB;
-    }
+    .btn-primary:hover { background: #2563EB; }
     .btn-primary:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-
     .btn-ghost {
       background: rgba(255,255,255,0.06);
       color: white;
       border: 1px solid var(--border);
-      margin-top: 0.75rem;
-    }
-    .btn-ghost:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    /* States */
-    .result {
-      display: none;
-      margin-top: 1.5rem;
-      padding: 1.25rem;
-      border-radius: 0.85rem;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .result.success {
-      display: block;
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      color: #4ade80;
-    }
-
-    .result.error {
-      display: block;
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #f87171;
-    }
-
-    .result.loading {
-      display: block;
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: #93c5fd;
     }
 
     .group-preview {
@@ -183,7 +137,6 @@
       border: 1px solid var(--border);
       border-radius: 0.85rem;
     }
-
     .group-preview.active {
       display: flex;
       gap: 1rem;
@@ -208,7 +161,6 @@
       font-weight: 600;
       margin-bottom: 0.2rem;
     }
-
     .group-info p {
       font-size: 0.85rem;
       color: var(--muted);
@@ -219,7 +171,6 @@
       padding-top: 1.5rem;
       border-top: 1px solid var(--border);
     }
-
     .requirements h4 {
       font-size: 0.85rem;
       font-weight: 600;
@@ -235,7 +186,6 @@
       color: var(--muted);
       margin-bottom: 0.5rem;
     }
-
     .req-item .check {
       width: 18px;
       height: 18px;
@@ -246,26 +196,64 @@
       justify-content: center;
       font-size: 0.7rem;
     }
-
     .req-item.passed .check {
       background: var(--success);
       border-color: var(--success);
       color: white;
     }
+
+    /* Custom Modal */
+    .custom-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .custom-modal-overlay.show { display: flex; }
+
+    .custom-modal {
+      background: #0f0f0f;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1rem;
+      padding: 1.75rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .custom-modal h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .custom-modal p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .custom-modal-buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <a href="dashboard.html" class="back">← Back to Organizations</a>
+    <a href="index.html" class="back">← Back</a>
 
     <div class="card">
       <h1>Create Organization</h1>
       <p class="subtitle">
-        Paste a link to your Roblox group or community. You must hold the <strong>highest rank</strong> in the group to generate it.
+        Paste a link to your Roblox group. You must hold the <strong>highest rank</strong> in the group to create it.
       </p>
 
       <div class="form-group">
-        <label>Roblox Group / Community Link</label>
+        <label>Roblox Group Link</label>
         <input 
           type="text" 
           id="groupLink" 
@@ -275,7 +263,6 @@
         <div class="hint">Supports roblox.com/groups/... links</div>
       </div>
 
-      <!-- Group Preview -->
       <div class="group-preview" id="groupPreview">
         <div class="group-icon" id="groupIcon">?</div>
         <div class="group-info">
@@ -287,8 +274,6 @@
       <button class="btn btn-primary" id="createBtn" onclick="createOrganization()" disabled>
         Create Organization
       </button>
-
-      <div class="result" id="resultBox"></div>
 
       <div class="requirements">
         <h4>Requirements</h4>
@@ -302,43 +287,60 @@
         </div>
         <div class="req-item" id="req3">
           <div class="check">3</div>
-          <span>Group must not already be claimed on RoWave</span>
+          <span>Group must not already be claimed</span>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Modal -->
+  <div class="custom-modal-overlay" id="customModal">
+    <div class="custom-modal">
+      <h3 id="modalTitle">Title</h3>
+      <p id="modalMessage">Message</p>
+      <div class="custom-modal-buttons">
+        <button class="btn btn-primary" id="modalOk">OK</button>
       </div>
     </div>
   </div>
 
   <script>
     let detectedGroupId = null;
-    let detectedGroupName = null;
+
+    function showModal(title, message) {
+      return new Promise((resolve) => {
+        const overlay = document.getElementById('customModal');
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalMessage').textContent = message;
+        overlay.classList.add('show');
+
+        document.getElementById('modalOk').onclick = () => {
+          overlay.classList.remove('show');
+          resolve(true);
+        };
+      });
+    }
 
     function detectGroup() {
       const input = document.getElementById('groupLink').value.trim();
       const preview = document.getElementById('groupPreview');
       const createBtn = document.getElementById('createBtn');
-      const resultBox = document.getElementById('resultBox');
 
-      // Reset
-      resultBox.className = 'result';
-      resultBox.style.display = 'none';
       document.getElementById('req1').classList.remove('passed');
       document.getElementById('req2').classList.remove('passed');
       document.getElementById('req3').classList.remove('passed');
 
-      // Simple regex to extract group ID
       const match = input.match(/groups\/(\d+)/i);
 
       if (match && match[1]) {
         detectedGroupId = match[1];
-        detectedGroupName = "Detected Group " + detectedGroupId; // In real version we fetch the real name
 
         document.getElementById('groupIcon').textContent = detectedGroupId.slice(-2);
-        document.getElementById('groupName').textContent = detectedGroupName;
+        document.getElementById('groupName').textContent = "Group " + detectedGroupId;
         document.getElementById('groupId').textContent = "ID: " + detectedGroupId;
 
         preview.classList.add('active');
         createBtn.disabled = false;
-
         document.getElementById('req1').classList.add('passed');
       } else {
         detectedGroupId = null;
@@ -350,44 +352,27 @@
     function createOrganization() {
       if (!detectedGroupId) return;
 
-      const resultBox = document.getElementById('resultBox');
       const createBtn = document.getElementById('createBtn');
-
-      // Show loading
-      resultBox.className = 'result loading';
-      resultBox.textContent = 'Checking group ownership and highest rank...';
       createBtn.disabled = true;
+      createBtn.textContent = "Checking...";
 
-      // MOCK: Simulate API check (in real version this calls Roblox API + your backend)
+      // Mock check
       setTimeout(() => {
-        // 70% chance of success for demo
         const success = Math.random() > 0.3;
 
         if (success) {
           document.getElementById('req2').classList.add('passed');
           document.getElementById('req3').classList.add('passed');
 
-          resultBox.className = 'result success';
-          resultBox.innerHTML = `
-            <strong>✓ Organization created successfully!</strong><br>
-            <span style="opacity:0.9">${detectedGroupName} is now available in your dashboard.</span>
-          `;
-
-          // In real version: redirect to dashboard or the new org
-          setTimeout(() => {
-            if (confirm('Organization created! Go to dashboard?')) {
-              window.location.href = 'dashboard.html';
-            }
-          }, 1000);
+          showModal("Organization Created", "Your organization was created successfully. You will now be taken to the dashboard.").then(() => {
+            window.location.href = 'dashboard.html';
+          });
         } else {
-          resultBox.className = 'result error';
-          resultBox.innerHTML = `
-            <strong>Error: Highest rank required</strong><br>
-            You must hold the highest rank in this group to create an organization on RoWave.
-          `;
           createBtn.disabled = false;
+          createBtn.textContent = "Create Organization";
+          showModal("Highest Rank Required", "You must hold the highest rank in this group to create an organization on RoWave.");
         }
-      }, 1600);
+      }, 1400);
     }
   </script>
 </body>
