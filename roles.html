@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoWave — Roles & Ranking</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #050505;
+      --card: #0f0f0f;
+      --border: rgba(255,255,255,0.08);
+      --text: #fff;
+      --muted: #94a3b8;
+      --primary: #3B82F6;
+      --success: #22c55e;
+      --warning: #f59e0b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      text-decoration: none;
+    }
+    .back:hover { color: white; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 1.25rem;
+      border-radius: 0.65rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover { background: #2563EB; }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.06);
+      color: white;
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .role-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .role-item:last-child { border-bottom: none; }
+
+    .role-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .role-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .role-info h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+
+    .role-info p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .role-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .badge-green { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .badge-purple { background: rgba(139,92,246,0.15); color: #a78bfa; }
+
+    .sync-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      background: #333;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .switch.active {
+      background: var(--primary);
+    }
+
+    .switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .switch.active::after {
+      transform: translateX(18px);
+    }
+
+    .permissions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .perm-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+
+    .perm-item input {
+      accent-color: var(--primary);
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="dashboard.html" class="back">← Back to Dashboard</a>
+
+    <div class="header">
+      <div>
+        <h1>Roles & Ranking</h1>
+        <p class="subtitle">Create roles, enable role sync, and manage permissions</p>
+      </div>
+      <button class="btn btn-primary" onclick="alert('Create Role modal would open here')">+ Create Role</button>
+    </div>
+
+    <!-- Role Sync Notice -->
+    <div class="card" style="border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.05);">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <div style="font-weight:600; margin-bottom:0.25rem;">Role Sync</div>
+          <div style="font-size:0.9rem; color:var(--muted);">
+            Automatically sync Discord roles with Roblox group ranks
+          </div>
+        </div>
+        <div class="sync-toggle">
+          <span>Enabled</span>
+          <div class="switch active" onclick="this.classList.toggle('active')"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Roles List -->
+    <div class="card">
+      <div class="section-title">Group Roles</div>
+
+      <div class="role-item">
+        <div class="role-left">
+          <div class="role-color" style="background:#ef4444;"></div>
+          <div class="role-info">
+            <h3>Owner</h3>
+            <p>Highest rank • Full access • Rank ID 255</p>
+          </div>
+        </div>
+        <div class="role-actions">
+          <span class="badge badge-purple">Protected</span>
+          <button class="btn btn-ghost" style="padding:0.4rem 0.8rem; font-size:0.8rem;">Edit</button>
+        </div>
+      </div>
+
+      <div class="role-item">
+        <div class="role-left">
+          <div class="role-color" style="background:#8b5cf6;"></div>
+          <div class="role-info">
+            <h3>Administrator</h3>
+            <p>Full moderation + sessions + settings • Rank ID 250</p>
+          </div>
+        </div>
+        <div class="role-actions">
+          <span class="badge badge-blue">Synced</span>
+          <button class="btn btn-ghost" style="padding:0.4rem 0.8rem; font-size:0.8rem;">Edit</button>
+        </div>
+      </div>
+
+      <div class="role-item">
+        <div class="role-left">
+          <div class="role-color" style="background:#3b82f6;"></div>
+          <div class="role-info">
+            <h3>Moderator</h3>
+            <p>Moderation + Mod Calls + Sessions • Rank ID 200</p>
+          </div>
+        </div>
+        <div class="role-actions">
+          <span class="badge badge-blue">Synced</span>
+          <button class="btn btn-ghost" style="padding:0.4rem 0.8rem; font-size:0.8rem;">Edit</button>
+        </div>
+      </div>
+
+      <div class="role-item">
+        <div class="role-left">
+          <div class="role-color" style="background:#22c55e;"></div>
+          <div class="role-info">
+            <h3>Helper</h3>
+            <p>Limited session permissions • Rank ID 150</p>
+          </div>
+        </div>
+        <div class="role-actions">
+          <span class="badge badge-green">Synced</span>
+          <button class="btn btn-ghost" style="padding:0.4rem 0.8rem; font-size:0.8rem;">Edit</button>
+        </div>
+      </div>
+
+      <div class="role-item">
+        <div class="role-left">
+          <div class="role-color" style="background:#64748b;"></div>
+          <div class="role-info">
+            <h3>Member</h3>
+            <p>Default member rank • Rank ID 1</p>
+          </div>
+        </div>
+        <div class="role-actions">
+          <button class="btn btn-ghost" style="padding:0.4rem 0.8rem; font-size:0.8rem;">Edit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permissions Example -->
+    <div class="card">
+      <div class="section-title">Permissions for “Moderator”</div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1rem;">
+        Choose what this role can do inside RoWave
+      </p>
+
+      <div class="permissions-grid">
+        <label class="perm-item"><input type="checkbox" checked> View Players</label>
+        <label class="perm-item"><input type="checkbox" checked> View Servers</label>
+        <label class="perm-item"><input type="checkbox" checked> Moderate (Warn/Ban)</label>
+        <label class="perm-item"><input type="checkbox" checked> Answer Mod Calls</label>
+        <label class="perm-item"><input type="checkbox" checked> Host Sessions</label>
+        <label class="perm-item"><input type="checkbox" checked> Manage Session Attendees</label>
+        <label class="perm-item"><input type="checkbox"> Promote / Demote</label>
+        <label class="perm-item"><input type="checkbox"> Edit Roles</label>
+        <label class="perm-item"><input type="checkbox"> Game Settings</label>
+        <label class="perm-item"><input type="checkbox"> Manage Organization</label>
+        <label class="perm-item"><input type="checkbox"> View Audit Logs</label>
+        <label class="perm-item"><input type="checkbox"> Custom Rank Creation</label>
+      </div>
+
+      <div style="margin-top:1.5rem; display:flex; gap:0.75rem;">
+        <button class="btn btn-primary">Save Permissions</button>
+        <button class="btn btn-ghost">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Rank Bot Note -->
+    <div class="card">
+      <div class="section-title">Rank Bot</div>
+      <p style="color:var(--muted); font-size:0.95rem; line-height:1.6; margin-bottom:1rem;">
+        Enable the RoWave Rank Bot to automatically promote/demote users in your Roblox group when actions are taken in the dashboard or during sessions.
+      </p>
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+        <button class="btn btn-primary">Configure Rank Bot</button>
+        <button class="btn btn-ghost">View Bot Invite</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple toggle for the sync switch (already has onclick in HTML)
+  </script>
+</body>
+</html>
