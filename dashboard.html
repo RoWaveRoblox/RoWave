@@ -89,6 +89,7 @@
       font-size: 0.95rem;
       transition: all 0.15s;
       margin-bottom: 2px;
+      text-decoration: none;
     }
 
     .nav-item:hover {
@@ -105,6 +106,7 @@
       width: 20px;
       height: 20px;
       opacity: 0.9;
+      flex-shrink: 0;
     }
 
     .user-box {
@@ -177,7 +179,6 @@
       margin-bottom: 1.25rem;
     }
 
-    /* Grid helpers */
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
     .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
@@ -187,7 +188,6 @@
       .grid-3 { grid-template-columns: 1fr 1fr; }
     }
 
-    /* Stat cards */
     .stat-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -206,7 +206,6 @@
       font-weight: 700;
     }
 
-    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -218,6 +217,8 @@
       cursor: pointer;
       border: none;
       transition: all 0.15s;
+      text-decoration: none;
+      color: inherit;
     }
 
     .btn-primary {
@@ -238,7 +239,6 @@
       font-size: 0.8rem;
     }
 
-    /* Tables / Lists */
     .list-item {
       display: flex;
       align-items: center;
@@ -279,11 +279,9 @@
     .badge-red { background: rgba(239,68,68,0.15); color: #f87171; }
     .badge-yellow { background: rgba(245,158,11,0.15); color: #fbbf24; }
 
-    /* View switching */
     .view { display: none; }
     .view.active { display: block; }
 
-    /* Organization cards */
     .org-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -291,6 +289,9 @@
       padding: 1.25rem;
       cursor: pointer;
       transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
     }
     .org-card:hover {
       border-color: var(--primary);
@@ -310,7 +311,6 @@
       font-size: 1.2rem;
     }
 
-    /* Empty state */
     .empty {
       text-align: center;
       padding: 3rem 1rem;
@@ -369,7 +369,11 @@
       </div>
 
       <div class="nav-section">
-        <div class="nav-title">Account</div>
+        <div class="nav-title">Tools</div>
+        <a href="game-settings.html" class="nav-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Game Settings
+        </a>
         <div class="nav-item" data-view="compliance">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           Compliance
@@ -395,13 +399,13 @@
     <div class="topbar">
       <div class="page-title" id="pageTitle">Home</div>
       <div style="display:flex; gap:0.75rem; align-items:center;">
-        <button class="btn btn-ghost btn-sm">Create Organization</button>
+        <a href="create-org.html" class="btn btn-ghost btn-sm">+ Create Organization</a>
         <div class="avatar" style="width:34px;height:34px;font-size:0.8rem;">RW</div>
       </div>
     </div>
 
     <div class="content">
-      <!-- ==================== HOME ==================== -->
+      <!-- HOME -->
       <div class="view active" id="view-home">
         <div class="grid-4" style="margin-bottom:1.75rem;">
           <div class="stat-card">
@@ -466,7 +470,7 @@
                 <div style="font-weight:600;">Training Session</div>
                 <div style="font-size:0.85rem;color:var(--muted);">Hosted by REDmonster776 • 12 attendees</div>
               </div>
-              <button class="btn btn-primary btn-sm">Join</button>
+              <a href="session-manage.html" class="btn btn-primary btn-sm">Manage</a>
             </div>
             <div class="empty" style="padding:1.5rem;">
               No other sessions right now
@@ -475,14 +479,14 @@
         </div>
       </div>
 
-      <!-- ==================== ORGANIZATIONS ==================== -->
+      <!-- ORGANIZATIONS -->
       <div class="view" id="view-organizations">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
           <div>
             <h2 style="font-size:1.4rem; font-weight:700;">Your Organizations</h2>
             <p style="color:var(--muted); font-size:0.95rem;">Groups you can access</p>
           </div>
-          <button class="btn btn-primary">+ Add Organization</button>
+          <a href="create-org.html" class="btn btn-primary">+ Add Organization</a>
         </div>
 
         <div class="grid-3">
@@ -501,14 +505,14 @@
             <div style="font-weight:600; margin-bottom:0.25rem;">BloxCord Services</div>
             <div style="font-size:0.85rem; color:var(--muted);">Member</div>
           </div>
-          <div class="org-card" style="border-style:dashed; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:160px;">
+          <a href="create-org.html" class="org-card" style="border-style:dashed; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:160px;">
             <div style="font-size:2rem; color:var(--muted); margin-bottom:0.5rem;">+</div>
             <div style="color:var(--muted); font-weight:500;">Add organization</div>
-          </div>
+          </a>
         </div>
       </div>
 
-      <!-- ==================== PLAYERS ==================== -->
+      <!-- PLAYERS -->
       <div class="view" id="view-players">
         <div class="card">
           <div class="card-title">Players</div>
@@ -542,7 +546,7 @@
         </div>
       </div>
 
-      <!-- ==================== SERVERS ==================== -->
+      <!-- SERVERS -->
       <div class="view" id="view-servers">
         <div class="card">
           <div class="card-title">Running Servers</div>
@@ -564,7 +568,7 @@
         </div>
       </div>
 
-      <!-- ==================== ROLES ==================== -->
+      <!-- ROLES -->
       <div class="view" id="view-roles">
         <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem;">
           <div>
@@ -598,7 +602,7 @@
         </div>
       </div>
 
-      <!-- ==================== MODERATION ==================== -->
+      <!-- MODERATION -->
       <div class="view" id="view-moderation">
         <div class="card">
           <div class="card-title">Moderation</div>
@@ -627,12 +631,12 @@
         </div>
       </div>
 
-      <!-- ==================== MOD CALLS ==================== -->
+      <!-- MOD CALLS -->
       <div class="view" id="view-modcalls">
         <div class="card">
           <div class="card-title">Mod Calls</div>
           <div class="card-sub">Incoming calls from players</div>
-          <div class="list-item">
+          <a href="modcall.html" class="list-item" style="text-decoration:none; color:inherit;">
             <div class="player">
               <div class="player-avatar">CB</div>
               <div>
@@ -641,16 +645,14 @@
               </div>
             </div>
             <div style="display:flex; gap:0.5rem;">
-              <button class="btn btn-primary btn-sm">Respond</button>
-              <button class="btn btn-ghost btn-sm">Assist</button>
-              <button class="btn btn-ghost btn-sm">Join Server</button>
+              <span class="btn btn-primary btn-sm">View</span>
             </div>
-          </div>
+          </a>
           <div class="empty">No other open mod calls</div>
         </div>
       </div>
 
-      <!-- ==================== SESSIONS ==================== -->
+      <!-- SESSIONS -->
       <div class="view" id="view-sessions">
         <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem;">
           <div>
@@ -666,7 +668,7 @@
               <div style="font-weight:600; font-size:1.1rem;">Training <span class="badge badge-green" style="margin-left:0.5rem;">Live</span></div>
               <div style="font-size:0.9rem; color:var(--muted); margin-top:0.3rem;">Hosted by REDmonster776 • 12 attendees • Started 4m ago</div>
             </div>
-            <button class="btn btn-primary">Manage Session</button>
+            <a href="session-manage.html" class="btn btn-primary">Manage Session</a>
           </div>
         </div>
 
@@ -674,7 +676,6 @@
           <div class="card">
             <div style="font-weight:600; margin-bottom:0.5rem;">Upcoming Training</div>
             <div style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">07:00 AM • in 7h • by KKDink</div>
-            <div style="font-size:0.8rem; margin-bottom:0.5rem;">Co-Host 2/2 • Helper 2/2</div>
             <button class="btn btn-ghost btn-sm" style="width:100%;">View</button>
           </div>
           <div class="card">
@@ -690,7 +691,7 @@
         </div>
       </div>
 
-      <!-- ==================== COMPLIANCE ==================== -->
+      <!-- COMPLIANCE -->
       <div class="view" id="view-compliance">
         <div class="card">
           <div class="card-title">Compliance History</div>
@@ -712,25 +713,25 @@
         </div>
       </div>
 
-      <!-- ==================== SETTINGS ==================== -->
+      <!-- SETTINGS -->
       <div class="view" id="view-settings">
         <div class="card">
           <div class="card-title">Theme</div>
           <div class="card-sub">Choose your preferred look</div>
           <div class="grid-2" style="max-width:500px;">
-            <div class="org-card" style="text-align:center;" onclick="alert('Dark Mode selected (default)')">
+            <div class="org-card" style="text-align:center;">
               <div style="font-weight:600;">Dark Mode</div>
               <div style="font-size:0.85rem;color:var(--muted);">Free</div>
             </div>
-            <div class="org-card" style="text-align:center;" onclick="alert('White Mode selected')">
+            <div class="org-card" style="text-align:center;">
               <div style="font-weight:600;">White Mode</div>
               <div style="font-size:0.85rem;color:var(--muted);">Free</div>
             </div>
-            <div class="org-card" style="text-align:center; opacity:0.6;" onclick="alert('Requires Wave gamepass or trial')">
+            <div class="org-card" style="text-align:center; opacity:0.6;">
               <div style="font-weight:600;">Wave Mode</div>
               <div style="font-size:0.85rem;color:var(--warning);">🔒 Locked</div>
             </div>
-            <div class="org-card" style="text-align:center; opacity:0.6;" onclick="alert('Requires Glass gamepass or trial')">
+            <div class="org-card" style="text-align:center; opacity:0.6;">
               <div style="font-weight:600;">Glass Mode</div>
               <div style="font-size:0.85rem;color:var(--warning);">🔒 Locked</div>
             </div>
@@ -741,8 +742,7 @@
   </div>
 
   <script>
-    // Simple view switcher
-    const navItems = document.querySelectorAll('.nav-item');
+    const navItems = document.querySelectorAll('.nav-item[data-view]');
     const views = document.querySelectorAll('.view');
     const pageTitle = document.getElementById('pageTitle');
 
@@ -761,16 +761,13 @@
 
     navItems.forEach(item => {
       item.addEventListener('click', () => {
-        // Update active nav
         navItems.forEach(n => n.classList.remove('active'));
         item.classList.add('active');
 
-        // Show correct view
         const viewName = item.getAttribute('data-view');
         views.forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + viewName).classList.add('active');
 
-        // Update title
         pageTitle.textContent = titles[viewName] || 'Dashboard';
       });
     });
