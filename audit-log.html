@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoWave — Audit Log</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #050505;
+      --card: #0f0f0f;
+      --border: rgba(255,255,255,0.08);
+      --text: #fff;
+      --muted: #94a3b8;
+      --primary: #3B82F6;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      text-decoration: none;
+    }
+    .back:hover { color: white; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .filters {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.45rem 0.9rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: var(--primary);
+      color: #93c5fd;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.1rem;
+      overflow: hidden;
+    }
+
+    .log-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .log-table th {
+      text-align: left;
+      padding: 1rem 1.25rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .log-table td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .log-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .log-table tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-green { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .badge-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .badge-red { background: rgba(239,68,68,0.15); color: #f87171; }
+    .badge-yellow { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .badge-purple { background: rgba(139,92,246,0.15); color: #a78bfa; }
+
+    .time {
+      color: var(--muted);
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: #111;
+      border: 1px solid var(--border);
+      border-radius: 0.65rem;
+      padding: 0.6rem 1rem;
+      max-width: 280px;
+    }
+
+    .search-box input {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.9rem;
+      outline: none;
+      width: 100%;
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="dashboard.html" class="back">← Back to Dashboard</a>
+
+    <div class="header">
+      <div>
+        <h1>Audit Log</h1>
+        <p class="subtitle">Full history of actions taken in your organization</p>
+      </div>
+      <div class="search-box">
+        <svg width="16" height="16" fill="none" stroke="#94a3b8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" placeholder="Search logs..." />
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active">All</button>
+      <button class="filter-btn">Moderation</button>
+      <button class="filter-btn">Ranking</button>
+      <button class="filter-btn">Sessions</button>
+      <button class="filter-btn">Mod Calls</button>
+      <button class="filter-btn">Settings</button>
+    </div>
+
+    <div class="card">
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>User</th>
+            <th>Target</th>
+            <th>Details</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-yellow">Warning</span></td>
+            <td>
+              <div class="user">
+                <div class="avatar">MO</div>
+                <span>Moderator1</span>
+              </div>
+            </td>
+            <td>JohnDoe123</td>
+            <td>Failure to Meet Hosting Expectations</td>
+            <td class="time">12 min ago</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-green">Promote</span></td>
+            <td>
+              <div class="user">
+                <div class="avatar">AD</div>
+                <span>AdminUser</span>
+              </div>
+            </td>
+            <td>AlexBuilder</td>
+            <td>Member → Moderator</td>
+            <td class="time">28 min ago</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">Game Ban</span></td>
+            <td>
+              <div class="user">
+                <div class="avatar">MO</div>
+                <span>Moderator1</span>
+              </div>
+            </td>
+            <td>SkyKid99</td>
+            <td>Permanent • “Idiot”</td>
+            <td class="time">1 hour ago</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Mod Call</span></td>
+            <td>
+              <div class="user">
+                <div class="avatar">CB</div>
+                <span>coolbuilder22</span>
+              </div>
+            </td>
+            <td>—</td>
+            <td>Called for a mod in Server #7</td>
+            <td class="time">1 hour ago</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-purple">Session</span></td>
+            <td>
+              <div class="user">
+                <div class="avatar">RE</div>
+                <span>REDmonster776</span>
+              </div>
+            </td>
+            <td>—</td>
+            <td>Started Training Session</td>
+            <td class="time">2 hours ago</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-green">Promote</span></td>
+            <td>
+              <div class="user">
+                <div class="avatar">AD</div>
+                <span>AdminUser</span>
+              </div>
+            </td>
+            <td>HelperUser22</td>
+            <td>Helper → Moderator</td>
+            <td class="time">3 hours ago</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-yellow">Warning</span></td>
+            <td>
+              <div class="user">
+                <div class="avatar">MO</div>
+                <span>Moderator2</span>
+              </div>
+            </td>
+            <td>RandomPlayer</td>
+            <td>Spam in chat</td>
+            <td class="time">5 hours ago</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Role Sync</span></td>
+            <td>
+              <div class="user">
+                <div class="avatar">SY</div>
+                <span>System</span>
+              </div>
+            </td>
+            <td>NewMember99</td>
+            <td>Discord role synced to Roblox rank</td>
+            <td class="time">6 hours ago</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
